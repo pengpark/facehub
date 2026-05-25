@@ -3,25 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MaskPolis 얼굴 갤러리</title>
+<title>Mask Polis얼굴 갤러리</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #0e0e0e; color: #e0dbd0; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; min-height: 100vh; }
 
-/* ── Welcome (FS mode) ── */
-#welcomeScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-.welcome-box { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.w-logo { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; letter-spacing: 0.2em; color: #c8c2b4; margin-bottom: 4px; }
+/* ── Login ── */
+#loginScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.login-box { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.w-logo { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; letter-spacing: 0.2em; color: #c8c2b4; }
 .w-logo span { font-style: italic; color: #9a8f7e; }
-.w-sub { font-size: 12px; color: #555; letter-spacing: 0.1em; margin-bottom: 4px; }
-.w-saved { font-size: 11px; color: #4a4a4a; letter-spacing: 0.06em; background: #161616; border: 1px solid #222; padding: 6px 16px; }
-.btn-folder { background: transparent; border: 1px solid #444; color: #aaa; padding: 10px 28px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 300; cursor: pointer; letter-spacing: 0.1em; transition: all 0.2s; }
-.btn-folder:hover { border-color: #888; color: #e0dbd0; }
-.btn-folder.sub { border-color: #2a2a2a; color: #555; font-size: 11px; padding: 7px 18px; }
-.btn-folder.sub:hover { border-color: #555; color: #aaa; }
-.w-note { font-size: 10px; color: #333; letter-spacing: 0.05em; line-height: 1.9; margin-top: 4px; }
+.w-sub { font-size: 12px; color: #555; letter-spacing: 0.1em; }
+.btn-google { display: flex; align-items: center; gap: 10px; background: #fff; border: none; color: #333; padding: 11px 24px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 400; cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s; margin-top: 8px; }
+.btn-google:hover { background: #f0f0f0; }
+.btn-google svg { width: 18px; height: 18px; flex-shrink: 0; }
+.w-note { font-size: 10px; color: #333; letter-spacing: 0.05em; line-height: 1.9; }
 
 /* ── Header ── */
 header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bottom: 1px solid #1e1e1e; padding: 0 36px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
@@ -29,18 +27,9 @@ header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bot
 .logo span { font-style: italic; color: #9a8f7e; }
 .header-right { display: flex; align-items: center; gap: 14px; }
 .count-badge { font-size: 11px; color: #888; letter-spacing: 0.08em; }
-.folder-badge { font-size: 10px; color: #484848; letter-spacing: 0.06em; cursor: pointer; transition: color 0.2s; }
-.folder-badge:hover { color: #888; }
-.btn-hdr { background: transparent; border: 1px solid #2e2e2e; color: #888; padding: 5px 14px; font-family: 'Noto Sans KR', sans-serif; font-size: 11px; font-weight: 300; cursor: pointer; letter-spacing: 0.06em; transition: all 0.2s; }
-.btn-hdr:hover { border-color: #666; color: #ccc; }
-.btn-hdr.accent { border-color: #484848; color: #bbb; }
-.btn-hdr.accent:hover { border-color: #888; color: #e0dbd0; }
-
-/* ── IDB banner ── */
-.idb-banner { background: #141414; border-bottom: 1px solid #1e1e1e; padding: 8px 36px; font-size: 11px; color: #555; letter-spacing: 0.05em; display: flex; align-items: center; gap: 12px; }
-.idb-banner strong { color: #888; }
-.idb-banner a { color: #5a7a9a; text-decoration: none; cursor: pointer; }
-.idb-banner a:hover { color: #7aaaca; }
+.btn-hdr { background: transparent; border: 1px solid #484848; color: #bbb; padding: 6px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 300; cursor: pointer; letter-spacing: 0.08em; transition: all 0.2s; }
+.btn-hdr:hover { border-color: #888; color: #e0dbd0; }
+.user-badge { font-size: 10px; color: #484848; letter-spacing: 0.05em; }
 
 /* ── Gallery ── */
 .gallery { padding: 36px 36px 80px; }
@@ -122,27 +111,27 @@ header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bot
 .ctx-item.danger { color:#c07070; }
 .ctx-item.danger:hover { background:#2a1a1a; color:#e09090; }
 
-/* ── Progress overlay ── */
-.progress-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:3000; align-items:center; justify-content:center; }
+/* ── Progress ── */
+.progress-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:3000; align-items:center; justify-content:center; }
 .progress-overlay.active { display:flex; }
-.progress-box { background:#161616; border:1px solid #2a2a2a; padding:32px 40px; text-align:center; }
-.progress-box p { font-size:12px; color:#888; letter-spacing:0.1em; margin-bottom:12px; }
-.progress-bar-wrap { width:220px; height:3px; background:#222; }
-.progress-bar { height:3px; background:#c8c2b4; width:0%; transition:width 0.2s; }
+.progress-box { background:#161616; border:1px solid #2a2a2a; padding:32px 48px; text-align:center; min-width:260px; }
+.progress-box p { font-size:12px; color:#888; letter-spacing:0.1em; margin-bottom:16px; }
+.progress-bar-wrap { width:100%; height:2px; background:#222; }
+.progress-bar { height:2px; background:#c8c2b4; width:0%; transition:width 0.3s; }
 </style>
 </head>
 <body>
 
-<!-- Welcome (FS mode only) -->
-<div id="welcomeScreen" style="display:none">
-  <div class="welcome-box">
+<!-- Login -->
+<div id="loginScreen">
+  <div class="login-box">
     <div class="w-logo">face <span>gallery</span></div>
-    <div class="w-sub">그림을 저장할 폴더를 선택해주세요</div>
-    <div class="w-saved" id="wSaved" style="display:none"></div>
-    <button class="btn-folder" id="btnReopen" style="display:none" onclick="reopenFolder()">이전 폴더 열기</button>
-    <button class="btn-folder" id="btnPick" onclick="pickFolder()">폴더 선택</button>
-    <button class="btn-folder sub" id="btnPickOther" style="display:none" onclick="pickFolder()">다른 폴더 선택</button>
-    <div class="w-note">선택한 폴더에 이미지 파일이 직접 저장됩니다<br>브라우저 데이터를 지워도 폴더가 있으면 복원 가능<br>Chrome / Edge 전용 방식</div>
+    <div class="w-sub">Google Drive에 그림을 저장하고 어디서든 볼 수 있어요</div>
+    <button class="btn-google" onclick="loginWithGoogle()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Google로 로그인
+    </button>
+    <div class="w-note">그림은 내 Google Drive의 face-gallery 폴더에 저장됩니다<br>어느 기기 어느 브라우저에서든 같은 갤러리를 볼 수 있어요</div>
   </div>
 </div>
 
@@ -152,21 +141,10 @@ header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bot
     <span class="logo">face <span>gallery</span></span>
     <div class="header-right">
       <span class="count-badge" id="countBadge"></span>
-      <span class="folder-badge" id="folderBadge"></span>
-      <!-- FS mode buttons -->
-      <button class="btn-hdr" id="btnChangeFolder" style="display:none" onclick="changeFolder()">폴더 변경</button>
-      <!-- IDB mode buttons -->
-      <button class="btn-hdr" id="btnImport" style="display:none" onclick="document.getElementById('importInput').click()">가져오기</button>
-      <input type="file" id="importInput" accept=".json" style="display:none" onchange="importBackup(this)">
-      <button class="btn-hdr" id="btnExport" style="display:none" onclick="exportBackup()">내보내기</button>
-      <button class="btn-hdr accent" onclick="openAddPersonModal()">＋ 새 인물 추가</button>
+      <span class="user-badge" id="userBadge"></span>
+      <button class="btn-hdr" onclick="openAddPersonModal()">＋ 새 인물 추가</button>
     </div>
   </header>
-  <!-- IDB mode warning banner -->
-  <div class="idb-banner" id="idbBanner" style="display:none">
-    <span>Safari / Firefox 모드 — 데이터가 브라우저에 저장됩니다.</span>
-    <strong>브라우저 데이터 삭제 전 반드시 <a onclick="exportBackup()">내보내기</a>로 백업하세요.</strong>
-  </div>
   <main class="gallery" id="gallery"></main>
 </div>
 
@@ -215,7 +193,7 @@ header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bot
   <div class="ctx-item danger" id="ctxDelete">이 그림 삭제</div>
 </div>
 
-<!-- Progress overlay (for export/import) -->
+<!-- Progress -->
 <div class="progress-overlay" id="progressOverlay">
   <div class="progress-box">
     <p id="progressMsg">처리 중…</p>
@@ -224,229 +202,186 @@ header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bot
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════
-//  MODE DETECTION
-// ═══════════════════════════════════════════════════
-const USE_FS = ('showDirectoryPicker' in window);
+// ════════════════════════════════════════
+//  ★ 여기에 클라이언트 ID를 넣으세요 ★
+// ════════════════════════════════════════
+const CLIENT_ID = '547492300865-dhd26i637kovrp1qhca3b7usmf660sdf.apps.googleusercontent.com';
+const SCOPES    = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email';
 
-// ═══════════════════════════════════════════════════
-//  SHARED STATE
-// ═══════════════════════════════════════════════════
-let meta       = { persons:[], images:[], nextPid:1, nextIid:1 };
-let blobCache  = new Map(); // filename -> object URL
-let uploadPid  = null;
-let pendingFiles = [];
-let lbImages   = [], lbIdx = 0;
-let ctxData    = null;
+// ════════════════════════════════════════
+//  State
+// ════════════════════════════════════════
+let tokenClient, accessToken = null, tokenExpiry = 0;
+let folderId = null, metaFileId = null;
+let meta = { persons:[], images:[], nextPid:1, nextIid:1 };
+let blobCache  = new Map();
+let uploadPid  = null, pendingFiles = [];
+let lbImages   = [], lbIdx = 0, ctxData = null;
 
-// ═══════════════════════════════════════════════════
-//  FS MODE (Chrome / Edge)
-// ═══════════════════════════════════════════════════
-let dirHandle  = null;
-let handleDB;
-let savedEntry = null;
-
-function openHandleDB() {
+// ════════════════════════════════════════
+//  Auth
+// ════════════════════════════════════════
+function loginWithGoogle() {
   return new Promise((res, rej) => {
-    const r = indexedDB.open('FGHandle', 1);
-    r.onupgradeneeded = e => e.target.result.createObjectStore('h', { keyPath:'id' });
-    r.onsuccess = e => { handleDB = e.target.result; res(); };
-    r.onerror   = rej;
-  });
-}
-function saveHandle(h) {
-  return new Promise((res, rej) => {
-    const tx = handleDB.transaction('h','readwrite');
-    tx.objectStore('h').put({ id:'dir', handle:h, name:h.name });
-    tx.oncomplete = res; tx.onerror = rej;
-  });
-}
-function loadSavedHandle() {
-  return new Promise((res, rej) => {
-    const tx = handleDB.transaction('h','readonly');
-    const r  = tx.objectStore('h').get('dir');
-    r.onsuccess = e => res(e.target.result || null); r.onerror = rej;
-  });
-}
-
-async function fsLoadMeta() {
-  try {
-    const fh = await dirHandle.getFileHandle('gallery.json');
-    const d  = JSON.parse(await (await fh.getFile()).text());
-    d.nextPid = d.nextPid || (Math.max(0,...d.persons.map(p=>p.id),0)+1);
-    d.nextIid = d.nextIid || (Math.max(0,...d.images.map(i=>i.id),0)+1);
-    return d;
-  } catch { return { persons:[], images:[], nextPid:1, nextIid:1 }; }
-}
-async function fsSaveMeta() {
-  const fh = await dirHandle.getFileHandle('gallery.json',{create:true});
-  const w  = await fh.createWritable();
-  await w.write(JSON.stringify(meta,null,2)); await w.close();
-}
-async function fsImgDir() { return dirHandle.getDirectoryHandle('images',{create:true}); }
-async function fsWrite(filename, blob) {
-  const d=await fsImgDir(), fh=await d.getFileHandle(filename,{create:true}), w=await fh.createWritable();
-  await w.write(blob); await w.close();
-}
-async function fsRemove(filename) {
-  try { const d=await fsImgDir(); await d.removeEntry(filename); } catch {}
-}
-async function fsBlobURL(filename) {
-  if (blobCache.has(filename)) return blobCache.get(filename);
-  try {
-    const d=await fsImgDir(), fh=await d.getFileHandle(filename);
-    const url=URL.createObjectURL(await fh.getFile());
-    blobCache.set(filename,url); return url;
-  } catch { return ''; }
-}
-
-async function reopenFolder() {
-  try {
-    const perm = await savedEntry.handle.requestPermission({mode:'readwrite'});
-    if (perm!=='granted') { alert('폴더 접근 권한이 필요합니다.'); return; }
-    dirHandle = savedEntry.handle;
-    await enterApp();
-  } catch { alert('폴더를 열 수 없습니다. 다른 폴더를 선택해주세요.'); }
-}
-async function pickFolder() {
-  try {
-    const h = await window.showDirectoryPicker({mode:'readwrite'});
-    dirHandle = h;
-    blobCache.forEach(u=>URL.revokeObjectURL(u)); blobCache.clear();
-    await saveHandle(h); await enterApp();
-  } catch(e) { if(e.name!=='AbortError') alert('폴더 선택에 실패했습니다.'); }
-}
-async function changeFolder() {
-  blobCache.forEach(u=>URL.revokeObjectURL(u)); blobCache.clear();
-  dirHandle=null;
-  document.getElementById('mainApp').style.display      = 'none';
-  document.getElementById('welcomeScreen').style.display = 'flex';
-}
-
-// ═══════════════════════════════════════════════════
-//  IDB MODE  (Safari / Firefox)
-// ═══════════════════════════════════════════════════
-let idb;
-function openIDB() {
-  return new Promise((res, rej) => {
-    const r = indexedDB.open('FaceGallery', 2);
-    r.onupgradeneeded = e => {
-      const d = e.target.result;
-      if (!d.objectStoreNames.contains('meta'))
-        d.createObjectStore('meta', {keyPath:'id'});
-      if (!d.objectStoreNames.contains('blobs'))
-        d.createObjectStore('blobs', {keyPath:'filename'});
+    tokenClient.callback = async resp => {
+      if (resp.error) { rej(resp); return; }
+      accessToken = resp.access_token;
+      tokenExpiry = Date.now() + resp.expires_in * 1000;
+      res();
     };
-    r.onsuccess = e => { idb = e.target.result; res(); };
-    r.onerror   = rej;
-  });
+    tokenClient.requestAccessToken({ prompt: 'select_account' });
+  }).then(() => initGallery());
 }
-function idbGet(store, key) {
-  return new Promise((res,rej) => {
-    const r = idb.transaction(store,'readonly').objectStore(store).get(key);
-    r.onsuccess = e => res(e.target.result); r.onerror = rej;
-  });
-}
-function idbPut(store, val) {
-  return new Promise((res,rej) => {
-    const r = idb.transaction(store,'readwrite').objectStore(store).put(val);
-    r.onsuccess = res; r.onerror = rej;
-  });
-}
-function idbDel(store, key) {
-  return new Promise((res,rej) => {
-    const r = idb.transaction(store,'readwrite').objectStore(store).delete(key);
-    r.onsuccess = res; r.onerror = rej;
+
+async function ensureToken() {
+  if (accessToken && Date.now() < tokenExpiry - 300000) return;
+  return new Promise((res, rej) => {
+    tokenClient.callback = resp => {
+      if (resp.error) { rej(resp); return; }
+      accessToken = resp.access_token;
+      tokenExpiry = Date.now() + resp.expires_in * 1000;
+      res();
+    };
+    tokenClient.requestAccessToken({ prompt: '' });
   });
 }
 
-async function idbLoadMeta() {
-  const r = await idbGet('meta','data');
-  if (!r) return { persons:[], images:[], nextPid:1, nextIid:1 };
-  const d = r.value;
-  d.nextPid = d.nextPid || (Math.max(0,...d.persons.map(p=>p.id),0)+1);
-  d.nextIid = d.nextIid || (Math.max(0,...d.images.map(i=>i.id),0)+1);
-  return d;
+// ════════════════════════════════════════
+//  Drive API helpers
+// ════════════════════════════════════════
+async function driveAPI(url, options = {}) {
+  await ensureToken();
+  const resp = await fetch(url, {
+    ...options,
+    headers: { 'Authorization': `Bearer ${accessToken}`, ...(options.headers||{}) }
+  });
+  if (!resp.ok && resp.status !== 204) {
+    const err = await resp.text();
+    throw new Error(`Drive API ${resp.status}: ${err}`);
+  }
+  return resp;
 }
-async function idbSaveMeta() {
-  await idbPut('meta', { id:'data', value:meta });
+
+async function driveJSON(url, options = {}) {
+  const resp = await driveAPI(url, options);
+  if (resp.status === 204) return null;
+  return resp.json();
 }
-async function idbWrite(filename, blob) {
-  await idbPut('blobs', { filename, blob });
+
+async function findFile(name, parentId) {
+  const q = `name='${name}' and '${parentId}' in parents and trashed=false`;
+  const d = await driveJSON(
+    `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=5`
+  );
+  return d.files[0] || null;
 }
-async function idbRemove(filename) {
-  await idbDel('blobs', filename);
-  blobCache.delete(filename);
+
+async function findRootFile(name, mimeType) {
+  const q = `name='${name}' and mimeType='${mimeType}' and trashed=false`;
+  const d = await driveJSON(
+    `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=5`
+  );
+  return d.files[0] || null;
 }
-async function idbBlobURL(filename) {
-  if (blobCache.has(filename)) return blobCache.get(filename);
+
+async function createFolder(name, parentId = null) {
+  const body = { name, mimeType: 'application/vnd.google-apps.folder' };
+  if (parentId) body.parents = [parentId];
+  return driveJSON('https://www.googleapis.com/drive/v3/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+}
+
+async function uploadJSON(name, data, parentId, existingId = null) {
+  const blob  = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const form  = new FormData();
+  const meta  = existingId ? { name } : { name, parents: [parentId] };
+  form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
+  form.append('file', blob);
+  const url    = existingId
+    ? `https://www.googleapis.com/upload/drive/v3/files/${existingId}?uploadType=multipart`
+    : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
+  return driveJSON(url, { method: existingId ? 'PATCH' : 'POST', body: form });
+}
+
+async function uploadImageBlob(imgBlob, parentId) {
+  const filename = `img_${Date.now()}_${Math.random().toString(36).slice(2,6)}.jpg`;
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify({ name: filename, parents: [parentId] })], { type: 'application/json' }));
+  form.append('file', imgBlob);
+  return driveJSON(
+    `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name`,
+    { method: 'POST', body: form }
+  );
+}
+
+async function deleteFromDrive(fileId) {
+  await driveAPI(`https://www.googleapis.com/drive/v3/files/${fileId}`, { method: 'DELETE' });
+}
+
+async function getImageURL(driveId) {
+  if (blobCache.has(driveId)) return blobCache.get(driveId);
   try {
-    const r   = await idbGet('blobs', filename);
-    if (!r) return '';
-    const url = URL.createObjectURL(r.blob);
-    blobCache.set(filename, url); return url;
+    const resp = await driveAPI(`https://www.googleapis.com/drive/v3/files/${driveId}?alt=media`);
+    const url  = URL.createObjectURL(await resp.blob());
+    blobCache.set(driveId, url);
+    return url;
   } catch { return ''; }
 }
 
-// ═══════════════════════════════════════════════════
-//  UNIFIED STORAGE API
-// ═══════════════════════════════════════════════════
-const store = {
-  loadMeta:  ()            => USE_FS ? fsLoadMeta()     : idbLoadMeta(),
-  saveMeta:  ()            => USE_FS ? fsSaveMeta()     : idbSaveMeta(),
-  write:     (fn, blob)    => USE_FS ? fsWrite(fn,blob) : idbWrite(fn,blob),
-  remove:    (fn)          => USE_FS ? fsRemove(fn)     : idbRemove(fn),
-  blobURL:   (fn)          => USE_FS ? fsBlobURL(fn)    : idbBlobURL(fn),
-};
+// ════════════════════════════════════════
+//  Gallery init
+// ════════════════════════════════════════
+async function initGallery() {
+  showProgress('Google Drive 연결 중…', 10);
 
-// ═══════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════
-async function init() {
-  if (USE_FS) {
-    // Chrome/Edge: show welcome screen
-    await openHandleDB();
-    savedEntry = await loadSavedHandle();
-    if (savedEntry) {
-      document.getElementById('wSaved').textContent     = '📁 ' + savedEntry.name;
-      document.getElementById('wSaved').style.display       = 'block';
-      document.getElementById('btnReopen').style.display    = 'block';
-      document.getElementById('btnPick').style.display      = 'none';
-      document.getElementById('btnPickOther').style.display = 'block';
-    }
-    document.getElementById('welcomeScreen').style.display = 'flex';
+  // Get user info
+  try {
+    const u = await driveJSON('https://www.googleapis.com/oauth2/v2/userinfo');
+    document.getElementById('userBadge').textContent = u.email;
+  } catch {}
+
+  setProgress(30, '갤러리 폴더 확인 중…');
+
+  // Find or create face-gallery folder
+  const FOLDER_MIME = 'application/vnd.google-apps.folder';
+  let folder = await findRootFile('face-gallery', FOLDER_MIME);
+  if (!folder) folder = await createFolder('face-gallery');
+  folderId = folder.id;
+
+  setProgress(60, '데이터 불러오는 중…');
+
+  // Load or create gallery.json
+  const metaFile = await findFile('gallery.json', folderId);
+  if (metaFile) {
+    metaFileId = metaFile.id;
+    const resp = await driveAPI(`https://www.googleapis.com/drive/v3/files/${metaFileId}?alt=media`);
+    meta = await resp.json();
+    meta.nextPid = meta.nextPid || (Math.max(0, ...meta.persons.map(p=>p.id), 0) + 1);
+    meta.nextIid = meta.nextIid || (Math.max(0, ...meta.images.map(i=>i.id),  0) + 1);
   } else {
-    // Safari/Firefox: go straight to app
-    await openIDB();
-    // Request persistent storage
-    if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
-    meta = await store.loadMeta();
-    await showMainApp();
-    // Show IDB UI elements
-    document.getElementById('idbBanner').style.display  = 'flex';
-    document.getElementById('btnImport').style.display  = 'block';
-    document.getElementById('btnExport').style.display  = 'block';
-    document.getElementById('folderBadge').textContent  = '브라우저 저장';
+    meta = { persons:[], images:[], nextPid:1, nextIid:1 };
+    const created = await uploadJSON('gallery.json', meta, folderId);
+    metaFileId = created.id;
   }
-}
 
-async function enterApp() {
-  // FS mode: called after folder is picked
-  meta = await store.loadMeta();
-  await showMainApp();
-  document.getElementById('folderBadge').textContent    = '📁 ' + dirHandle.name;
-  document.getElementById('btnChangeFolder').style.display = 'block';
-}
+  setProgress(100, '완료!');
+  setTimeout(hideProgress, 300);
 
-async function showMainApp() {
-  document.getElementById('welcomeScreen').style.display = 'none';
-  document.getElementById('mainApp').style.display       = 'block';
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display     = 'block';
   await render();
 }
 
-// ═══════════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════════
+async function saveMeta() {
+  await uploadJSON('gallery.json', meta, folderId, metaFileId);
+}
+
+// ════════════════════════════════════════
+//  Render
+// ════════════════════════════════════════
 async function render() {
   const gallery = document.getElementById('gallery');
   const badge   = document.getElementById('countBadge');
@@ -486,13 +421,13 @@ async function render() {
         t.className='thumb';
         const img=document.createElement('img');
         img.alt=person.name; img.loading='lazy';
-        store.blobURL(d.filename).then(u=>{ img.src=u; });
+        getImageURL(d.driveId).then(u=>{ img.src=u; });
         const db=document.createElement('button');
         db.className='thumb-del'; db.textContent='×'; db.title='삭제';
-        db.addEventListener('click',e=>{e.stopPropagation();deleteImage(d.id,d.filename);});
+        db.addEventListener('click',e=>{e.stopPropagation();deleteImage(d.id,d.driveId);});
         t.appendChild(img); t.appendChild(db);
-        t.addEventListener('click', ()=>openLightbox(images,i));
-        t.addEventListener('contextmenu', e=>openCtx(e,d,images,i));
+        t.addEventListener('click',()=>openLightbox(images,i));
+        t.addEventListener('contextmenu',e=>openCtx(e,d,images,i));
         grid.appendChild(t);
       } else {
         const emp=document.createElement('div');
@@ -510,9 +445,9 @@ function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ═══════════════════════════════════════════════════
-//  PERSON CRUD
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
+//  Person CRUD
+// ════════════════════════════════════════
 function openAddPersonModal() {
   document.getElementById('personNameInput').value='';
   openOverlay('addPersonOverlay');
@@ -521,28 +456,32 @@ function openAddPersonModal() {
 async function addPerson() {
   const name=document.getElementById('personNameInput').value.trim();
   if(!name) return;
-  meta.persons.push({id:meta.nextPid++,name,createdAt:Date.now()});
-  await store.saveMeta(); closeOverlay('addPersonOverlay'); await render();
+  meta.persons.push({id:meta.nextPid++, name, createdAt:Date.now()});
+  await saveMeta(); closeOverlay('addPersonOverlay'); await render();
 }
 async function deletePerson(id,name) {
   if(!confirm(`"${name}" 인물과 모든 그림을 삭제합니다.\n계속하시겠습니까?`)) return;
-  for (const img of meta.images.filter(i=>i.personId===id)) {
-    await store.remove(img.filename); blobCache.delete(img.filename);
+  showProgress('삭제 중…', 0);
+  const imgs=meta.images.filter(i=>i.personId===id);
+  for(let i=0;i<imgs.length;i++){
+    setProgress(Math.round((i/imgs.length)*90));
+    await deleteFromDrive(imgs[i].driveId).catch(()=>{});
+    blobCache.delete(imgs[i].driveId);
   }
   meta.images  = meta.images.filter(i=>i.personId!==id);
   meta.persons = meta.persons.filter(p=>p.id!==id);
-  await store.saveMeta(); await render();
+  await saveMeta(); hideProgress(); await render();
 }
 
-// ═══════════════════════════════════════════════════
-//  UPLOAD
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
+//  Upload
+// ════════════════════════════════════════
 function openUploadModal(pid,pname) {
   uploadPid=pid; pendingFiles=[];
-  document.getElementById('uploadTitle').textContent   = `${pname} — 그림 추가`;
-  document.getElementById('previewGrid').innerHTML     = '';
-  document.getElementById('previewGrid').style.display = 'none';
-  document.getElementById('uploadHint').style.display  = 'none';
+  document.getElementById('uploadTitle').textContent   =`${pname} — 그림 추가`;
+  document.getElementById('previewGrid').innerHTML     ='';
+  document.getElementById('previewGrid').style.display ='none';
+  document.getElementById('uploadHint').style.display  ='none';
   openOverlay('uploadOverlay');
 }
 document.getElementById('dropZone').addEventListener('click',()=>document.getElementById('fileInput').click());
@@ -607,108 +546,37 @@ async function saveImages() {
   if(slots<=0){alert('이미 5장이 등록되어 있습니다.');return;}
   const toSave=pendingFiles.slice(0,slots);
   if(pendingFiles.length>slots) alert(`빈 슬롯이 ${slots}개 남아있어 ${toSave.length}장만 저장됩니다.`);
-  for(const file of toSave){
-    const blob=await compressToBlob(file);
-    const filename=`${uploadPid}_${meta.nextIid}.jpg`;
-    await store.write(filename,blob);
-    meta.images.push({id:meta.nextIid++,personId:uploadPid,filename,createdAt:Date.now()});
+  closeOverlay('uploadOverlay');
+  showProgress('Google Drive에 업로드 중…', 0);
+  for(let i=0;i<toSave.length;i++){
+    setProgress(Math.round((i/toSave.length)*90), `${i+1} / ${toSave.length} 업로드 중…`);
+    const blob=await compressToBlob(toSave[i]);
+    const uploaded=await uploadImageBlob(blob, folderId);
+    meta.images.push({id:meta.nextIid++, personId:uploadPid, driveId:uploaded.id, createdAt:Date.now()});
   }
-  await store.saveMeta(); closeOverlay('uploadOverlay'); await render();
+  setProgress(95,'저장 중…');
+  await saveMeta();
+  setProgress(100,'완료!');
+  setTimeout(hideProgress, 300);
+  await render();
 }
-async function deleteImage(imgId,filename){
-  await store.remove(filename); blobCache.delete(filename);
+async function deleteImage(imgId,driveId) {
+  await deleteFromDrive(driveId).catch(()=>{});
+  blobCache.delete(driveId);
   meta.images=meta.images.filter(i=>i.id!==imgId);
-  await store.saveMeta(); await render();
+  await saveMeta(); await render();
   if(document.getElementById('lightbox').classList.contains('active')) closeLightbox();
 }
 
-// ═══════════════════════════════════════════════════
-//  EXPORT / IMPORT (IDB mode)
-// ═══════════════════════════════════════════════════
-async function exportBackup() {
-  const total=meta.images.length;
-  if(total===0&&meta.persons.length===0){alert('내보낼 데이터가 없습니다.');return;}
-  showProgress('백업 파일 만드는 중…',0);
-  const imageData={};
-  for(let i=0;i<meta.images.length;i++){
-    const img=meta.images[i];
-    setProgress(Math.round((i/total)*80), '이미지 변환 중…');
-    if(USE_FS){
-      const url=await fsBlobURL(img.filename);
-      imageData[img.filename]=await blobToBase64(await (await fetch(url)).blob());
-    } else {
-      const r=await idbGet('blobs',img.filename);
-      if(r) imageData[img.filename]=await blobToBase64(r.blob);
-    }
-  }
-  setProgress(90,'파일 작성 중…');
-  const backup={version:2,exportedAt:new Date().toISOString(),meta,imageData};
-  const json=JSON.stringify(backup);
-  const blob=new Blob([json],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`face-gallery-backup-${new Date().toISOString().slice(0,10)}.json`;
-  a.click(); URL.revokeObjectURL(a.href);
-  hideProgress();
-}
-
-async function importBackup(input) {
-  const file=input.files[0]; if(!file) return;
-  if(!confirm('가져오기 하면 현재 데이터가 모두 교체됩니다.\n계속하시겠습니까?')) return;
-  showProgress('백업 파일 읽는 중…',0);
-  try {
-    const text=await file.text();
-    const backup=JSON.parse(text);
-    if(!backup.meta||!backup.imageData) throw new Error('잘못된 파일 형식입니다.');
-    const total=Object.keys(backup.imageData).length;
-    let i=0;
-    for(const [filename,b64] of Object.entries(backup.imageData)){
-      setProgress(Math.round((i/total)*90),'이미지 복원 중…');
-      const blob=await base64ToBlob(b64,'image/jpeg');
-      if(USE_FS) await fsWrite(filename,blob);
-      else       await idbWrite(filename,blob);
-      blobCache.delete(filename); i++;
-    }
-    meta=backup.meta;
-    await store.saveMeta();
-    setProgress(100,'완료!');
-    await render();
-    setTimeout(hideProgress,600);
-  } catch(e) {
-    hideProgress(); alert('가져오기 실패: '+e.message);
-  }
-  input.value='';
-}
-
-function blobToBase64(blob){
-  return new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(blob);});
-}
-function base64ToBlob(b64,type){
-  const arr=b64.split(','),raw=atob(arr[1]),bytes=new Uint8Array(raw.length);
-  for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
-  return new Blob([bytes],{type});
-}
-
-function showProgress(msg,pct){
-  document.getElementById('progressMsg').textContent=msg;
-  document.getElementById('progressBar').style.width=pct+'%';
-  document.getElementById('progressOverlay').classList.add('active');
-}
-function setProgress(pct,msg){
-  if(msg) document.getElementById('progressMsg').textContent=msg;
-  document.getElementById('progressBar').style.width=pct+'%';
-}
-function hideProgress(){ document.getElementById('progressOverlay').classList.remove('active'); }
-
-// ═══════════════════════════════════════════════════
-//  LIGHTBOX
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
+//  Lightbox
+// ════════════════════════════════════════
 async function openLightbox(images,idx){
   lbImages=images; lbIdx=idx; await setLbImg();
   document.getElementById('lightbox').classList.add('active');
 }
 async function setLbImg(){
-  document.getElementById('lightboxImg').src=await store.blobURL(lbImages[lbIdx].filename);
+  document.getElementById('lightboxImg').src=await getImageURL(lbImages[lbIdx].driveId);
   document.getElementById('lbInfo').textContent=`${lbIdx+1} / ${lbImages.length}`;
 }
 function closeLightbox(){document.getElementById('lightbox').classList.remove('active');}
@@ -716,14 +584,12 @@ async function lbNav(dir){lbIdx=(lbIdx+dir+lbImages.length)%lbImages.length;awai
 document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))closeLightbox();});
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('lightbox').classList.contains('active')) return;
-  if(e.key==='ArrowRight')lbNav(1);
-  if(e.key==='ArrowLeft')lbNav(-1);
-  if(e.key==='Escape')closeLightbox();
+  if(e.key==='ArrowRight')lbNav(1); if(e.key==='ArrowLeft')lbNav(-1); if(e.key==='Escape')closeLightbox();
 });
 
-// ═══════════════════════════════════════════════════
-//  CONTEXT MENU
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
+//  Context menu
+// ════════════════════════════════════════
 function openCtx(e,d,allImages,idx){
   e.preventDefault(); ctxData={d,allImages,idx};
   const m=document.getElementById('ctxMenu');
@@ -731,26 +597,41 @@ function openCtx(e,d,allImages,idx){
   m.classList.add('active');
 }
 document.getElementById('ctxView').addEventListener('click',()=>{if(ctxData)openLightbox(ctxData.allImages,ctxData.idx);closeCtx();});
-document.getElementById('ctxDelete').addEventListener('click',()=>{if(ctxData&&confirm('이 그림을 삭제합니다.'))deleteImage(ctxData.d.id,ctxData.d.filename);closeCtx();});
+document.getElementById('ctxDelete').addEventListener('click',()=>{if(ctxData&&confirm('이 그림을 삭제합니다.'))deleteImage(ctxData.d.id,ctxData.d.driveId);closeCtx();});
 function closeCtx(){document.getElementById('ctxMenu').classList.remove('active');ctxData=null;}
 document.addEventListener('click',closeCtx);
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCtx();});
 
-// ═══════════════════════════════════════════════════
-//  OVERLAY HELPERS
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
+//  Overlay / progress helpers
+// ════════════════════════════════════════
 function openOverlay(id){document.getElementById(id).classList.add('active');}
 function closeOverlay(id){document.getElementById(id).classList.remove('active');}
-document.querySelectorAll('.overlay').forEach(ov=>{
-  ov.addEventListener('click',e=>{if(e.target===ov)closeOverlay(ov.id);});
-});
+document.querySelectorAll('.overlay').forEach(ov=>{ov.addEventListener('click',e=>{if(e.target===ov)closeOverlay(ov.id);});});
 document.getElementById('personNameInput').addEventListener('keydown',e=>{if(e.key==='Enter')addPerson();});
+function showProgress(msg,pct){
+  document.getElementById('progressMsg').textContent=msg;
+  document.getElementById('progressBar').style.width=(pct||0)+'%';
+  document.getElementById('progressOverlay').classList.add('active');
+}
+function setProgress(pct,msg){
+  if(msg)document.getElementById('progressMsg').textContent=msg;
+  document.getElementById('progressBar').style.width=pct+'%';
+}
+function hideProgress(){document.getElementById('progressOverlay').classList.remove('active');}
 
-// ═══════════════════════════════════════════════════
-//  START
-// ═══════════════════════════════════════════════════
-init();
+// ════════════════════════════════════════
+//  Init — GIS 로드 후 실행
+// ════════════════════════════════════════
+function initGSI() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: ''
+  });
+}
 </script>
+
+<script src="https://accounts.google.com/gsi/client" onload="initGSI()" async defer></script>
 <script src="https://unpkg.com/heic2any@0.0.4/dist/heic2any.min.js"></script>
 </body>
 </html>
