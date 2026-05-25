@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mask Polis얼굴 갤러리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0e0e0e; color: #e0dbd0; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; min-height: 100vh; }
+
+/* ── Login ── */
+#loginScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.login-box { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.w-logo { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; letter-spacing: 0.2em; color: #c8c2b4; }
+.w-logo span { font-style: italic; color: #9a8f7e; }
+.w-sub { font-size: 12px; color: #555; letter-spacing: 0.1em; }
+.btn-google { display: flex; align-items: center; gap: 10px; background: #fff; border: none; color: #333; padding: 11px 24px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 400; cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s; margin-top: 8px; }
+.btn-google:hover { background: #f0f0f0; }
+.btn-google svg { width: 18px; height: 18px; flex-shrink: 0; }
+.w-note { font-size: 10px; color: #333; letter-spacing: 0.05em; line-height: 1.9; }
+
+/* ── Header ── */
+header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bottom: 1px solid #1e1e1e; padding: 0 36px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; letter-spacing: 0.2em; color: #c8c2b4; }
+.logo span { font-style: italic; color: #9a8f7e; }
+.header-right { display: flex; align-items: center; gap: 14px; }
+.count-badge { font-size: 11px; color: #888; letter-spacing: 0.08em; }
+.btn-hdr { background: transparent; border: 1px solid #484848; color: #bbb; padding: 6px 18px; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 300; cursor: pointer; letter-spacing: 0.08em; transition: all 0.2s; }
+.btn-hdr:hover { border-color: #888; color: #e0dbd0; }
+.user-badge { font-size: 10px; color: #484848; letter-spacing: 0.05em; }
+
+/* ── Gallery ── */
+.gallery { padding: 36px 36px 80px; }
+.person-row { margin-bottom: 52px; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.person-header { display: flex; align-items: center; margin-bottom: 10px; gap: 12px; }
+.person-name { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; color: #a09680; white-space: nowrap; }
+.person-img-count { font-size: 10px; color: #777; letter-spacing: 0.05em; }
+.person-line { flex: 1; height: 1px; background: #2a2a2a; }
+.btn-del-person { background: transparent; border: none; color: #555; font-size: 14px; cursor: pointer; padding: 2px 4px; transition: color 0.2s; line-height: 1; }
+.btn-del-person:hover { color: #c06060; }
+
+/* ── Thumbnails ── */
+.thumbnails { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.thumb { aspect-ratio: 3/4; background: #141414; overflow: hidden; position: relative; cursor: pointer; }
+.thumb::after { content:''; position:absolute; inset:0; border:1px solid rgba(255,255,255,0.04); pointer-events:none; transition:border-color 0.2s; }
+.thumb:hover::after { border-color: rgba(255,255,255,0.14); }
+.thumb img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease; }
+.thumb:hover img { transform: scale(1.04); }
+.thumb-del { position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.7); border:none; color:#888; width:22px; height:22px; font-size:13px; cursor:pointer; display:none; align-items:center; justify-content:center; line-height:1; transition:all 0.2s; z-index:2; }
+.thumb:hover .thumb-del { display:flex; }
+.thumb-del:hover { background:rgba(100,30,30,0.9); color:#fff; }
+.thumb-empty { aspect-ratio:3/4; background:#111; border:1px dashed #2a2a2a; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; }
+.thumb-empty:hover { border-color:#4a4a4a; background:#161616; }
+.thumb-empty .pi { color:#484848; font-size:20px; line-height:1; }
+.thumb-empty:hover .pi { color:#888; }
+
+/* ── Empty state ── */
+.empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:120px 32px; gap:12px; }
+.empty-state .es-t { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:300; color:#888; font-style:italic; }
+.empty-state .es-s { font-size:12px; color:#666; letter-spacing:0.08em; }
+.es-btn { margin-top:16px; background:transparent; border:1px solid #444; color:#888; padding:9px 24px; font-family:'Noto Sans KR',sans-serif; font-size:12px; cursor:pointer; letter-spacing:0.08em; transition:all 0.2s; }
+.es-btn:hover { border-color:#888; color:#ccc; }
+
+/* ── Lightbox ── */
+.lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:1000; align-items:center; justify-content:center; }
+.lightbox.active { display:flex; }
+#lightboxImg { max-width:min(85vw,900px); max-height:88vh; object-fit:contain; display:block; }
+.lb-close { position:fixed; top:18px; right:22px; background:transparent; border:none; color:#777; font-size:26px; cursor:pointer; line-height:1; padding:4px 8px; transition:color 0.2s; z-index:10; }
+.lb-close:hover { color:#ddd; }
+.lb-nav { position:fixed; top:50%; transform:translateY(-50%); background:transparent; border:none; color:#666; font-size:36px; cursor:pointer; padding:20px 16px; transition:color 0.2s; z-index:10; line-height:1; user-select:none; }
+.lb-nav:hover { color:#ddd; }
+.lb-nav.prev { left:8px; } .lb-nav.next { right:8px; }
+.lb-info { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); font-size:11px; color:#666; letter-spacing:0.1em; }
+
+/* ── Modals ── */
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:500; align-items:center; justify-content:center; }
+.overlay.active { display:flex; }
+.modal { background:#161616; border:1px solid #222; padding:28px 28px 24px; width:380px; max-width:92vw; }
+.modal-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:300; color:#c8c2b4; margin-bottom:20px; }
+.modal input[type="text"] { width:100%; background:#0e0e0e; border:1px solid #282828; color:#c8c2b4; padding:9px 14px; font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:300; margin-bottom:20px; outline:none; }
+.modal input[type="text"]:focus { border-color:#444; }
+.modal input[type="text"]::placeholder { color:#383838; }
+.modal-btns { display:flex; gap:8px; justify-content:flex-end; margin-top:4px; }
+.btn { cursor:pointer; font-family:'Noto Sans KR',sans-serif; font-size:12px; letter-spacing:0.06em; padding:8px 18px; border:none; }
+.btn-cancel { background:transparent; border:1px solid #252525; color:#555; transition:all 0.2s; }
+.btn-cancel:hover { color:#888; border-color:#444; }
+.btn-ok { background:#c8c2b4; color:#0e0e0e; font-weight:500; transition:background 0.2s; }
+.btn-ok:hover { background:#e0dbd0; }
+
+/* ── Upload ── */
+.upload-modal { width:440px; }
+.drop-zone { border:1px dashed #3a3a3a; padding:28px; text-align:center; cursor:pointer; margin-bottom:16px; transition:all 0.2s; color:#777; font-size:12px; line-height:1.8; letter-spacing:0.05em; }
+.drop-zone.drag { border-color:#888; background:#141414; color:#bbb; }
+.drop-zone:hover { border-color:#555; }
+.preview-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin-bottom:16px; }
+.prev-thumb { aspect-ratio:3/4; background:#111; overflow:hidden; position:relative; }
+.prev-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.prev-thumb .rm { position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.7); border:none; color:#888; width:18px; height:18px; font-size:11px; cursor:pointer; display:none; align-items:center; justify-content:center; }
+.prev-thumb:hover .rm { display:flex; }
+.upload-hint { font-size:11px; color:#777; margin-bottom:16px; letter-spacing:0.04em; }
+.converting-msg { font-size:12px; color:#888; text-align:center; padding:12px 0; letter-spacing:0.06em; }
+
+/* ── Context menu ── */
+.ctx-menu { position:fixed; background:#1a1a1a; border:1px solid #2a2a2a; min-width:140px; z-index:2000; display:none; }
+.ctx-menu.active { display:block; }
+.ctx-item { padding:9px 16px; font-size:12px; cursor:pointer; color:#bbb; letter-spacing:0.04em; transition:all 0.15s; }
+.ctx-item:hover { background:#222; color:#e0dbd0; }
+.ctx-item.danger { color:#c07070; }
+.ctx-item.danger:hover { background:#2a1a1a; color:#e09090; }
+
+/* ── Progress ── */
+.progress-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:3000; align-items:center; justify-content:center; }
+.progress-overlay.active { display:flex; }
+.progress-box { background:#161616; border:1px solid #2a2a2a; padding:32px 48px; text-align:center; min-width:260px; }
+.progress-box p { font-size:12px; color:#888; letter-spacing:0.1em; margin-bottom:16px; }
+.progress-bar-wrap { width:100%; height:2px; background:#222; }
+.progress-bar { height:2px; background:#c8c2b4; width:0%; transition:width 0.3s; }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="w-logo">face <span>gallery</span></div>
+    <div class="w-sub">Google Drive에 그림을 저장하고 어디서든 볼 수 있어요</div>
+    <button class="btn-google" onclick="loginWithGoogle()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Google로 로그인
+    </button>
+    <div class="w-note">그림은 내 Google Drive의 face-gallery 폴더에 저장됩니다<br>어느 기기 어느 브라우저에서든 같은 갤러리를 볼 수 있어요</div>
+  </div>
+</div>
+
+<!-- Main app -->
+<div id="mainApp" style="display:none">
+  <header>
+    <span class="logo">face <span>gallery</span></span>
+    <div class="header-right">
+      <span class="count-badge" id="countBadge"></span>
+      <span class="user-badge" id="userBadge"></span>
+      <button class="btn-hdr" onclick="openAddPersonModal()">＋ 새 인물 추가</button>
+    </div>
+  </header>
+  <main class="gallery" id="gallery"></main>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">×</button>
+  <button class="lb-nav prev" onclick="lbNav(-1)">‹</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lb-nav next" onclick="lbNav(1)">›</button>
+  <div class="lb-info" id="lbInfo"></div>
+</div>
+
+<!-- Add Person -->
+<div class="overlay" id="addPersonOverlay">
+  <div class="modal">
+    <div class="modal-title">새 인물 추가</div>
+    <input type="text" id="personNameInput" placeholder="이름 또는 별칭" maxlength="50">
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeOverlay('addPersonOverlay')">취소</button>
+      <button class="btn btn-ok" onclick="addPerson()">추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload -->
+<div class="overlay" id="uploadOverlay">
+  <div class="modal upload-modal">
+    <div class="modal-title" id="uploadTitle">그림 추가</div>
+    <div class="drop-zone" id="dropZone">
+      <div>클릭하거나 이미지를 드래그하세요</div>
+      <div style="font-size:11px;color:#2a2a2a;margin-top:6px">JPG · PNG · WEBP · HEIC · 여러 장 가능</div>
+    </div>
+    <input type="file" id="fileInput" multiple accept="image/*,.heic,.heif" style="display:none">
+    <div class="preview-grid" id="previewGrid" style="display:none"></div>
+    <div class="upload-hint" id="uploadHint" style="display:none"></div>
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeOverlay('uploadOverlay')">취소</button>
+      <button class="btn btn-ok" onclick="saveImages()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- Context Menu -->
+<div class="ctx-menu" id="ctxMenu">
+  <div class="ctx-item" id="ctxView">크게 보기</div>
+  <div class="ctx-item danger" id="ctxDelete">이 그림 삭제</div>
+</div>
+
+<!-- Progress -->
+<div class="progress-overlay" id="progressOverlay">
+  <div class="progress-box">
+    <p id="progressMsg">처리 중…</p>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  ★ 여기에 클라이언트 ID를 넣으세요 ★
+// ════════════════════════════════════════
+const CLIENT_ID = '547492300865-dhd26i637kovrp1qhca3b7usmf660sdf.apps.googleusercontent.com';
+const SCOPES    = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email';
+
+// ════════════════════════════════════════
+//  State
+// ════════════════════════════════════════
+let tokenClient, accessToken = null, tokenExpiry = 0;
+let folderId = null, metaFileId = null;
+let meta = { persons:[], images:[], nextPid:1, nextIid:1 };
+let blobCache  = new Map();
+let uploadPid  = null, pendingFiles = [];
+let lbImages   = [], lbIdx = 0, ctxData = null;
+
+// ════════════════════════════════════════
+//  Auth
+// ════════════════════════════════════════
+function loginWithGoogle() {
+  return new Promise((res, rej) => {
+    tokenClient.callback = async resp => {
+      if (resp.error) { rej(resp); return; }
+      accessToken = resp.access_token;
+      tokenExpiry = Date.now() + resp.expires_in * 1000;
+      res();
+    };
+    tokenClient.requestAccessToken({ prompt: 'select_account' });
+  }).then(() => initGallery());
+}
+
+async function ensureToken() {
+  if (accessToken && Date.now() < tokenExpiry - 300000) return;
+  return new Promise((res, rej) => {
+    tokenClient.callback = resp => {
+      if (resp.error) { rej(resp); return; }
+      accessToken = resp.access_token;
+      tokenExpiry = Date.now() + resp.expires_in * 1000;
+      res();
+    };
+    tokenClient.requestAccessToken({ prompt: '' });
+  });
+}
+
+// ════════════════════════════════════════
+//  Drive API helpers
+// ════════════════════════════════════════
+async function driveAPI(url, options = {}) {
+  await ensureToken();
+  const resp = await fetch(url, {
+    ...options,
+    headers: { 'Authorization': `Bearer ${accessToken}`, ...(options.headers||{}) }
+  });
+  if (!resp.ok && resp.status !== 204) {
+    const err = await resp.text();
+    throw new Error(`Drive API ${resp.status}: ${err}`);
+  }
+  return resp;
+}
+
+async function driveJSON(url, options = {}) {
+  const resp = await driveAPI(url, options);
+  if (resp.status === 204) return null;
+  return resp.json();
+}
+
+async function findFile(name, parentId) {
+  const q = `name='${name}' and '${parentId}' in parents and trashed=false`;
+  const d = await driveJSON(
+    `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=5`
+  );
+  return d.files[0] || null;
+}
+
+async function findRootFile(name, mimeType) {
+  const q = `name='${name}' and mimeType='${mimeType}' and trashed=false`;
+  const d = await driveJSON(
+    `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=5`
+  );
+  return d.files[0] || null;
+}
+
+async function createFolder(name, parentId = null) {
+  const body = { name, mimeType: 'application/vnd.google-apps.folder' };
+  if (parentId) body.parents = [parentId];
+  return driveJSON('https://www.googleapis.com/drive/v3/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+}
+
+async function uploadJSON(name, data, parentId, existingId = null) {
+  const blob  = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const form  = new FormData();
+  const meta  = existingId ? { name } : { name, parents: [parentId] };
+  form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
+  form.append('file', blob);
+  const url    = existingId
+    ? `https://www.googleapis.com/upload/drive/v3/files/${existingId}?uploadType=multipart`
+    : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
+  return driveJSON(url, { method: existingId ? 'PATCH' : 'POST', body: form });
+}
+
+async function uploadImageBlob(imgBlob, parentId) {
+  const filename = `img_${Date.now()}_${Math.random().toString(36).slice(2,6)}.jpg`;
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify({ name: filename, parents: [parentId] })], { type: 'application/json' }));
+  form.append('file', imgBlob);
+  return driveJSON(
+    `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name`,
+    { method: 'POST', body: form }
+  );
+}
+
+async function deleteFromDrive(fileId) {
+  await driveAPI(`https://www.googleapis.com/drive/v3/files/${fileId}`, { method: 'DELETE' });
+}
+
+async function getImageURL(driveId) {
+  if (blobCache.has(driveId)) return blobCache.get(driveId);
+  try {
+    const resp = await driveAPI(`https://www.googleapis.com/drive/v3/files/${driveId}?alt=media`);
+    const url  = URL.createObjectURL(await resp.blob());
+    blobCache.set(driveId, url);
+    return url;
+  } catch { return ''; }
+}
+
+// ════════════════════════════════════════
+//  Gallery init
+// ════════════════════════════════════════
+async function initGallery() {
+  showProgress('Google Drive 연결 중…', 10);
+
+  // Get user info
+  try {
+    const u = await driveJSON('https://www.googleapis.com/oauth2/v2/userinfo');
+    document.getElementById('userBadge').textContent = u.email;
+  } catch {}
+
+  setProgress(30, '갤러리 폴더 확인 중…');
+
+  // Find or create face-gallery folder
+  const FOLDER_MIME = 'application/vnd.google-apps.folder';
+  let folder = await findRootFile('face-gallery', FOLDER_MIME);
+  if (!folder) folder = await createFolder('face-gallery');
+  folderId = folder.id;
+
+  setProgress(60, '데이터 불러오는 중…');
+
+  // Load or create gallery.json
+  const metaFile = await findFile('gallery.json', folderId);
+  if (metaFile) {
+    metaFileId = metaFile.id;
+    const resp = await driveAPI(`https://www.googleapis.com/drive/v3/files/${metaFileId}?alt=media`);
+    meta = await resp.json();
+    meta.nextPid = meta.nextPid || (Math.max(0, ...meta.persons.map(p=>p.id), 0) + 1);
+    meta.nextIid = meta.nextIid || (Math.max(0, ...meta.images.map(i=>i.id),  0) + 1);
+  } else {
+    meta = { persons:[], images:[], nextPid:1, nextIid:1 };
+    const created = await uploadJSON('gallery.json', meta, folderId);
+    metaFileId = created.id;
+  }
+
+  setProgress(100, '완료!');
+  setTimeout(hideProgress, 300);
+
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display     = 'block';
+  await render();
+}
+
+async function saveMeta() {
+  await uploadJSON('gallery.json', meta, folderId, metaFileId);
+}
+
+// ════════════════════════════════════════
+//  Render
+// ════════════════════════════════════════
+async function render() {
+  const gallery = document.getElementById('gallery');
+  const badge   = document.getElementById('countBadge');
+  gallery.innerHTML = '';
+
+  if (!meta.persons.length) {
+    badge.textContent = '';
+    gallery.innerHTML = `<div class="empty-state">
+      <div class="es-t">아직 인물이 없습니다</div>
+      <div class="es-s">새 인물을 추가하고 그림을 모아보세요</div>
+      <button class="es-btn" onclick="openAddPersonModal()">＋ 새 인물 추가</button>
+    </div>`;
+    return;
+  }
+
+  badge.textContent = `인물 ${meta.persons.length}명`;
+  meta.persons.sort((a,b) => a.createdAt - b.createdAt);
+
+  for (const person of meta.persons) {
+    const images = meta.images.filter(i=>i.personId===person.id)
+                              .sort((a,b)=>a.createdAt-b.createdAt);
+    const row = document.createElement('div');
+    row.className = 'person-row';
+    row.innerHTML = `<div class="person-header">
+      <span class="person-name">${esc(person.name)}</span>
+      <span class="person-img-count">${images.length} / 5</span>
+      <span class="person-line"></span>
+      <button class="btn-del-person" onclick="deletePerson(${person.id},'${esc(person.name)}')">×</button>
+    </div>`;
+
+    const grid = document.createElement('div');
+    grid.className = 'thumbnails';
+
+    for (let i=0; i<5; i++) {
+      if (images[i]) {
+        const d=images[i], t=document.createElement('div');
+        t.className='thumb';
+        const img=document.createElement('img');
+        img.alt=person.name; img.loading='lazy';
+        getImageURL(d.driveId).then(u=>{ img.src=u; });
+        const db=document.createElement('button');
+        db.className='thumb-del'; db.textContent='×'; db.title='삭제';
+        db.addEventListener('click',e=>{e.stopPropagation();deleteImage(d.id,d.driveId);});
+        t.appendChild(img); t.appendChild(db);
+        t.addEventListener('click',()=>openLightbox(images,i));
+        t.addEventListener('contextmenu',e=>openCtx(e,d,images,i));
+        grid.appendChild(t);
+      } else {
+        const emp=document.createElement('div');
+        emp.className='thumb-empty';
+        emp.innerHTML='<span class="pi">＋</span>';
+        emp.addEventListener('click',()=>openUploadModal(person.id,person.name));
+        grid.appendChild(emp);
+      }
+    }
+    row.appendChild(grid); gallery.appendChild(row);
+  }
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ════════════════════════════════════════
+//  Person CRUD
+// ════════════════════════════════════════
+function openAddPersonModal() {
+  document.getElementById('personNameInput').value='';
+  openOverlay('addPersonOverlay');
+  setTimeout(()=>document.getElementById('personNameInput').focus(),60);
+}
+async function addPerson() {
+  const name=document.getElementById('personNameInput').value.trim();
+  if(!name) return;
+  meta.persons.push({id:meta.nextPid++, name, createdAt:Date.now()});
+  await saveMeta(); closeOverlay('addPersonOverlay'); await render();
+}
+async function deletePerson(id,name) {
+  if(!confirm(`"${name}" 인물과 모든 그림을 삭제합니다.\n계속하시겠습니까?`)) return;
+  showProgress('삭제 중…', 0);
+  const imgs=meta.images.filter(i=>i.personId===id);
+  for(let i=0;i<imgs.length;i++){
+    setProgress(Math.round((i/imgs.length)*90));
+    await deleteFromDrive(imgs[i].driveId).catch(()=>{});
+    blobCache.delete(imgs[i].driveId);
+  }
+  meta.images  = meta.images.filter(i=>i.personId!==id);
+  meta.persons = meta.persons.filter(p=>p.id!==id);
+  await saveMeta(); hideProgress(); await render();
+}
+
+// ════════════════════════════════════════
+//  Upload
+// ════════════════════════════════════════
+function openUploadModal(pid,pname) {
+  uploadPid=pid; pendingFiles=[];
+  document.getElementById('uploadTitle').textContent   =`${pname} — 그림 추가`;
+  document.getElementById('previewGrid').innerHTML     ='';
+  document.getElementById('previewGrid').style.display ='none';
+  document.getElementById('uploadHint').style.display  ='none';
+  openOverlay('uploadOverlay');
+}
+document.getElementById('dropZone').addEventListener('click',()=>document.getElementById('fileInput').click());
+document.getElementById('fileInput').addEventListener('change',function(){addPendingFiles(Array.from(this.files));this.value='';});
+const dz=document.getElementById('dropZone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{
+  e.preventDefault(); dz.classList.remove('drag');
+  addPendingFiles(Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/')||/\.(heic|heif)$/i.test(f.name)));
+});
+
+function isHeic(f){return f.type==='image/heic'||f.type==='image/heif'||/\.(heic|heif)$/i.test(f.name);}
+async function convertIfHeic(f) {
+  if(!isHeic(f)) return f;
+  try {
+    const b=await heic2any({blob:f,toType:'image/jpeg',quality:0.88});
+    const arr=Array.isArray(b)?b[0]:b;
+    return new File([arr],f.name.replace(/\.(heic|heif)$/i,'.jpg'),{type:'image/jpeg'});
+  } catch {return f;}
+}
+async function addPendingFiles(files) {
+  const hint=document.getElementById('uploadHint');
+  const hc=files.filter(isHeic);
+  if(hc.length){hint.style.display='block';hint.innerHTML=`<span class="converting-msg">HEIC 변환 중… (${hc.length}장)</span>`;}
+  const converted=await Promise.all(files.map(convertIfHeic));
+  pendingFiles.push(...converted); renderPreview();
+}
+function renderPreview() {
+  const grid=document.getElementById('previewGrid'), hint=document.getElementById('uploadHint');
+  grid.innerHTML='';
+  if(!pendingFiles.length){grid.style.display='none';hint.style.display='none';return;}
+  grid.style.display='grid'; hint.style.display='block';
+  hint.textContent=`${pendingFiles.length}장 선택됨`;
+  pendingFiles.forEach((file,i)=>{
+    const url=URL.createObjectURL(file);
+    const div=document.createElement('div'); div.className='prev-thumb';
+    const img=document.createElement('img'); img.src=url;
+    const rm=document.createElement('button'); rm.className='rm'; rm.textContent='×';
+    rm.addEventListener('click',ev=>{ev.stopPropagation();URL.revokeObjectURL(url);pendingFiles.splice(i,1);renderPreview();});
+    div.appendChild(img); div.appendChild(rm); grid.appendChild(div);
+  });
+}
+async function compressToBlob(file) {
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file), img=new Image();
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      const MAX=1600; let w=img.naturalWidth, h=img.naturalHeight;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      c.toBlob(b=>b?res(b):rej(new Error('toBlob failed')),'image/jpeg',0.88);
+    };
+    img.onerror=rej; img.src=url;
+  });
+}
+async function saveImages() {
+  if(!pendingFiles.length){closeOverlay('uploadOverlay');return;}
+  const existing=meta.images.filter(i=>i.personId===uploadPid);
+  const slots=5-existing.length;
+  if(slots<=0){alert('이미 5장이 등록되어 있습니다.');return;}
+  const toSave=pendingFiles.slice(0,slots);
+  if(pendingFiles.length>slots) alert(`빈 슬롯이 ${slots}개 남아있어 ${toSave.length}장만 저장됩니다.`);
+  closeOverlay('uploadOverlay');
+  showProgress('Google Drive에 업로드 중…', 0);
+  for(let i=0;i<toSave.length;i++){
+    setProgress(Math.round((i/toSave.length)*90), `${i+1} / ${toSave.length} 업로드 중…`);
+    const blob=await compressToBlob(toSave[i]);
+    const uploaded=await uploadImageBlob(blob, folderId);
+    meta.images.push({id:meta.nextIid++, personId:uploadPid, driveId:uploaded.id, createdAt:Date.now()});
+  }
+  setProgress(95,'저장 중…');
+  await saveMeta();
+  setProgress(100,'완료!');
+  setTimeout(hideProgress, 300);
+  await render();
+}
+async function deleteImage(imgId,driveId) {
+  await deleteFromDrive(driveId).catch(()=>{});
+  blobCache.delete(driveId);
+  meta.images=meta.images.filter(i=>i.id!==imgId);
+  await saveMeta(); await render();
+  if(document.getElementById('lightbox').classList.contains('active')) closeLightbox();
+}
+
+// ════════════════════════════════════════
+//  Lightbox
+// ════════════════════════════════════════
+async function openLightbox(images,idx){
+  lbImages=images; lbIdx=idx; await setLbImg();
+  document.getElementById('lightbox').classList.add('active');
+}
+async function setLbImg(){
+  document.getElementById('lightboxImg').src=await getImageURL(lbImages[lbIdx].driveId);
+  document.getElementById('lbInfo').textContent=`${lbIdx+1} / ${lbImages.length}`;
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('active');}
+async function lbNav(dir){lbIdx=(lbIdx+dir+lbImages.length)%lbImages.length;await setLbImg();}
+document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))closeLightbox();});
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lightbox').classList.contains('active')) return;
+  if(e.key==='ArrowRight')lbNav(1); if(e.key==='ArrowLeft')lbNav(-1); if(e.key==='Escape')closeLightbox();
+});
+
+// ════════════════════════════════════════
+//  Context menu
+// ════════════════════════════════════════
+function openCtx(e,d,allImages,idx){
+  e.preventDefault(); ctxData={d,allImages,idx};
+  const m=document.getElementById('ctxMenu');
+  m.style.left=e.clientX+'px'; m.style.top=e.clientY+'px';
+  m.classList.add('active');
+}
+document.getElementById('ctxView').addEventListener('click',()=>{if(ctxData)openLightbox(ctxData.allImages,ctxData.idx);closeCtx();});
+document.getElementById('ctxDelete').addEventListener('click',()=>{if(ctxData&&confirm('이 그림을 삭제합니다.'))deleteImage(ctxData.d.id,ctxData.d.driveId);closeCtx();});
+function closeCtx(){document.getElementById('ctxMenu').classList.remove('active');ctxData=null;}
+document.addEventListener('click',closeCtx);
+
+// ════════════════════════════════════════
+//  Overlay / progress helpers
+// ════════════════════════════════════════
+function openOverlay(id){document.getElementById(id).classList.add('active');}
+function closeOverlay(id){document.getElementById(id).classList.remove('active');}
+document.querySelectorAll('.overlay').forEach(ov=>{ov.addEventListener('click',e=>{if(e.target===ov)closeOverlay(ov.id);});});
+document.getElementById('personNameInput').addEventListener('keydown',e=>{if(e.key==='Enter')addPerson();});
+function showProgress(msg,pct){
+  document.getElementById('progressMsg').textContent=msg;
+  document.getElementById('progressBar').style.width=(pct||0)+'%';
+  document.getElementById('progressOverlay').classList.add('active');
+}
+function setProgress(pct,msg){
+  if(msg)document.getElementById('progressMsg').textContent=msg;
+  document.getElementById('progressBar').style.width=pct+'%';
+}
+function hideProgress(){document.getElementById('progressOverlay').classList.remove('active');}
+
+// ════════════════════════════════════════
+//  Init — GIS 로드 후 실행
+// ════════════════════════════════════════
+function initGSI() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: ''
+  });
+}
+</script>
+
+<script src="https://accounts.google.com/gsi/client" onload="initGSI()" async defer></script>
+<script src="https://unpkg.com/heic2any@0.0.4/dist/heic2any.min.js"></script>
+</body>
+</html>
