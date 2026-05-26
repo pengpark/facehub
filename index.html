@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mask Polis얼굴 갤러리</title>
+<title>MaskPolis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -118,6 +118,85 @@ header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bot
 .progress-box p { font-size:12px; color:#888; letter-spacing:0.1em; margin-bottom:16px; }
 .progress-bar-wrap { width:100%; height:2px; background:#222; }
 .progress-bar { height:2px; background:#c8c2b4; width:0%; transition:width 0.3s; }
+
+/* ── FAB (mobile only) ── */
+.fab { display: none; position: fixed; bottom: 24px; right: 20px; z-index: 100; width: 52px; height: 52px; border-radius: 50%; background: #c8c2b4; border: none; color: #0e0e0e; font-size: 26px; line-height: 1; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.5); transition: background 0.2s, transform 0.15s; display: flex; align-items: center; justify-content: center; }
+.fab:active { transform: scale(0.93); background: #e0dbd0; }
+
+/* ── Responsive: Tablet ── */
+@media (max-width: 860px) {
+  .gallery { padding: 24px 20px 72px; }
+  .person-row { margin-bottom: 40px; }
+  .thumbnails { gap: 5px; }
+  .upload-modal { width: min(96vw, 440px); }
+  .user-badge { display: none; }
+}
+
+/* ── Responsive: Mobile ── */
+@media (max-width: 540px) {
+  /* Login */
+  .w-logo { font-size: 26px; }
+  .w-sub { font-size: 11px; letter-spacing: 0.06em; }
+  .w-note { font-size: 10px; padding: 0 20px; text-align: center; }
+  .btn-google { font-size: 12px; padding: 10px 20px; }
+
+  /* Header */
+  header { padding: 0 14px; height: 48px; }
+  .logo { font-size: 17px; letter-spacing: 0.14em; }
+  .header-right { gap: 8px; }
+  .count-badge { display: none; }
+  .user-badge { display: none; }
+  .btn-hdr { display: none; } /* replaced by FAB */
+
+  /* FAB visible on mobile */
+  .fab { display: flex; }
+
+  /* Gallery — keep 5 columns, tighter spacing */
+  .gallery { padding: 14px 10px 88px; }
+  .person-row { margin-bottom: 28px; }
+  .person-header { margin-bottom: 7px; gap: 8px; }
+  .person-name { font-size: 10px; letter-spacing: 0.12em; }
+  .person-img-count { font-size: 9px; }
+  .thumbnails { grid-template-columns: repeat(5, 1fr); gap: 3px; }
+
+  /* Always show delete button on touch devices */
+  .thumb-del { display: flex !important; opacity: 0.75; width: 20px; height: 20px; font-size: 11px; top: 3px; right: 3px; }
+
+  /* Empty slot plus icon */
+  .thumb-empty .pi { font-size: 16px; }
+
+  /* Empty state */
+  .empty-state { padding: 80px 24px; }
+  .empty-state .es-t { font-size: 18px; }
+
+  /* Lightbox — full screen, swipe-friendly */
+  .lightbox { background: #000; }
+  #lightboxImg { max-width: 100vw; max-height: calc(100vh - 80px); }
+  .lb-nav { font-size: 32px; padding: 32px 6px; color: rgba(255,255,255,0.25); }
+  .lb-nav:active { color: rgba(255,255,255,0.8); }
+  .lb-close { top: 10px; right: 12px; font-size: 24px; padding: 8px; color: rgba(255,255,255,0.5); }
+  .lb-info { bottom: 16px; font-size: 11px; background: rgba(0,0,0,0.5); padding: 4px 10px; }
+
+  /* Modals — bottom sheet */
+  .overlay { align-items: flex-end; }
+  .modal {
+    width: 100vw; max-width: 100vw;
+    border-left: none; border-right: none; border-bottom: none;
+    border-top: 1px solid #2a2a2a;
+    padding: 20px 18px 36px;
+    border-radius: 16px 16px 0 0;
+  }
+  .upload-modal { width: 100vw; max-width: 100vw; }
+  .modal-title { font-size: 15px; margin-bottom: 16px; }
+  .modal input[type="text"] { font-size: 16px; /* prevent iOS zoom */ padding: 10px 12px; margin-bottom: 16px; }
+  .modal-btns { gap: 10px; }
+  .btn { padding: 10px 20px; font-size: 13px; }
+  .preview-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .drop-zone { padding: 20px 14px; font-size: 12px; }
+
+  /* Progress */
+  .progress-box { width: 88vw; min-width: unset; padding: 24px 24px; }
+}
 </style>
 </head>
 <body>
@@ -146,7 +225,8 @@ header { position: sticky; top: 0; z-index: 200; background: #0e0e0e; border-bot
     </div>
   </header>
   <main class="gallery" id="gallery"></main>
-</div>
+  <!-- FAB: mobile only -->
+  <button class="fab" onclick="openAddPersonModal()" aria-label="새 인물 추가">＋</button>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox">
@@ -586,6 +666,21 @@ document.addEventListener('keydown',e=>{
   if(!document.getElementById('lightbox').classList.contains('active')) return;
   if(e.key==='ArrowRight')lbNav(1); if(e.key==='ArrowLeft')lbNav(-1); if(e.key==='Escape')closeLightbox();
 });
+
+// Swipe support for lightbox
+let tsX=0, tsY=0;
+document.getElementById('lightbox').addEventListener('touchstart',e=>{
+  tsX=e.touches[0].clientX; tsY=e.touches[0].clientY;
+},{passive:true});
+document.getElementById('lightbox').addEventListener('touchend',e=>{
+  const dx=tsX-e.changedTouches[0].clientX;
+  const dy=Math.abs(tsY-e.changedTouches[0].clientY);
+  if(Math.abs(dx)>44&&dy<60){ // horizontal swipe
+    if(dx>0) lbNav(1); else lbNav(-1);
+  } else if(Math.abs(dx)<10&&dy<10) { // tap to close
+    closeLightbox();
+  }
+},{passive:true});
 
 // ════════════════════════════════════════
 //  Context menu
