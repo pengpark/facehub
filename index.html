@@ -661,24 +661,28 @@ async function setLbImg(){
 }
 function closeLightbox(){document.getElementById('lightbox').classList.remove('active');}
 async function lbNav(dir){lbIdx=(lbIdx+dir+lbImages.length)%lbImages.length;await setLbImg();}
-document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))closeLightbox();});
+// 데스크톱: 배경 클릭으로 닫기
+document.getElementById('lightbox').addEventListener('click',e=>{
+  if(e.target===document.getElementById('lightbox')) closeLightbox();
+});
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('lightbox').classList.contains('active')) return;
   if(e.key==='ArrowRight')lbNav(1); if(e.key==='ArrowLeft')lbNav(-1); if(e.key==='Escape')closeLightbox();
 });
 
-// Swipe support for lightbox
-let tsX=0, tsY=0;
+// 모바일: 스와이프만 처리, 닫기는 X 버튼만
+let tsX=0, tsY=0, tsMoved=false;
 document.getElementById('lightbox').addEventListener('touchstart',e=>{
-  tsX=e.touches[0].clientX; tsY=e.touches[0].clientY;
+  tsX=e.touches[0].clientX; tsY=e.touches[0].clientY; tsMoved=false;
+},{passive:true});
+document.getElementById('lightbox').addEventListener('touchmove',e=>{
+  tsMoved=true;
 },{passive:true});
 document.getElementById('lightbox').addEventListener('touchend',e=>{
   const dx=tsX-e.changedTouches[0].clientX;
   const dy=Math.abs(tsY-e.changedTouches[0].clientY);
-  if(Math.abs(dx)>44&&dy<60){ // horizontal swipe
+  if(Math.abs(dx)>44&&dy<80){ // 수평 스와이프
     if(dx>0) lbNav(1); else lbNav(-1);
-  } else if(Math.abs(dx)<10&&dy<10) { // tap to close
-    closeLightbox();
   }
 },{passive:true});
 
