@@ -6,758 +6,405 @@
 <title>ATTENTION — Whitepaper</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=DM+Mono:wght@300;400&family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #080808;
-    --paper: #0f0e0e;
-    --text: #d4cfc7;
-    --dim: #4a4540;
-    --ember: #c4622d;
-    --ash: #8a7f76;
-    --line: rgba(212,207,199,0.07);
-    --gold: #b89a4a;
 
-    --club: #4a7c59;
-    --heart: #b03a3a;
-    --diamond: #4a6b9c;
-    --spade: #7a5c9c;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    line-height: 1.85;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 10% 90%, rgba(196,98,45,0.06) 0%, transparent 45%),
-      radial-gradient(ellipse at 90% 10%, rgba(184,154,74,0.04) 0%, transparent 45%),
-      radial-gradient(ellipse at 50% 50%, rgba(122,92,156,0.02) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .wrap { position: relative; z-index: 2; }
-
-  /* COVER */
-  .cover {
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: 1fr auto;
-    border-bottom: 1px solid var(--line);
-    overflow: hidden;
-    position: relative;
-  }
-
-  .cover-suits {
-    position: absolute;
-    top: 0; right: 0; bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-right: 48px;
-    gap: 8px;
-    opacity: 0;
-    animation: fadeIn 1.2s 1s forwards;
-  }
-
-  .cover-suit-sym {
-    font-size: clamp(48px, 8vw, 96px);
-    line-height: 1;
-    opacity: 0.07;
-    font-family: serif;
-  }
-
-  .cover-suit-sym.c { color: var(--club); }
-  .cover-suit-sym.h { color: var(--heart); }
-  .cover-suit-sym.d { color: var(--diamond); }
-  .cover-suit-sym.s { color: var(--spade); }
-
-  .cover-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 80px 60px 60px;
-    max-width: 680px;
-  }
-
-  .cover-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: var(--ember);
-    text-transform: uppercase;
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeIn 1s 0.3s forwards;
-  }
-
-  .cover-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(64px, 14vw, 140px);
-    line-height: 0.88;
-    letter-spacing: 0.02em;
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeIn 1s 0.5s forwards;
-  }
-
-  .cover-title .project {
-    display: block;
-    font-size: 0.38em;
-    color: var(--dim);
-    letter-spacing: 0.3em;
-    margin-bottom: 8px;
-  }
-
-  .cover-title .main { color: var(--text); display: block; }
-  .cover-title .accent { color: var(--ember); display: block; }
-
-  .cover-sub {
-    font-family: 'Crimson Pro', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: var(--gold);
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeIn 1s 0.7s forwards;
-  }
-
-  .cover-desc {
-    font-size: 14px;
-    color: var(--ash);
-    line-height: 1.9;
-    opacity: 0;
-    animation: fadeIn 1s 0.9s forwards;
-  }
-
-  .cover-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 28px 60px;
-    border-top: 1px solid var(--line);
-    opacity: 0;
-    animation: fadeIn 1s 1.1s forwards;
-  }
-
-  .cover-footer-mono {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--dim);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    line-height: 1.8;
-  }
-
-  .cover-footer-italic {
-    font-family: 'Crimson Pro', serif;
-    font-style: italic;
-    font-size: 14px;
-    color: var(--dim);
-    text-align: right;
-    line-height: 1.6;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: none; }
-  }
-
-  /* BODY */
-  .body {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 100px 48px 140px;
-  }
-
-  .section {
-    margin-bottom: 96px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s, transform 0.8s;
-  }
-
-  .section.visible { opacity: 1; transform: none; }
-
-  .sec-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--ember);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .sec-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
-
-  .sec-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(34px, 5.5vw, 60px);
-    line-height: 1.0;
-    letter-spacing: 0.02em;
-    margin-bottom: 32px;
-  }
-
-  .sec-title em { color: var(--ember); font-style: normal; }
-  .sec-title .gold { color: var(--gold); }
-
-  p {
-    font-size: 15px;
-    line-height: 1.95;
-    color: #b0a89e;
-    margin-bottom: 20px;
-  }
-
-  strong { color: var(--text); font-weight: 400; }
-
-  .thesis {
-    border-left: 3px solid var(--ember);
-    padding: 28px 32px;
-    margin: 40px 0;
-    background: rgba(196,98,45,0.04);
-  }
-
-  .thesis p {
-    font-family: 'Crimson Pro', serif;
-    font-size: 21px;
-    font-style: italic;
-    color: var(--text);
-    line-height: 1.65;
-    margin: 0;
-  }
-
-  .thesis-gold {
-    border-left: 3px solid var(--gold);
-    background: rgba(184,154,74,0.04);
-  }
-
-  .thesis-gold p { color: var(--text); }
-
-  /* CARD SUITS */
-  .suits-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin: 48px 0;
-  }
-
-  .suit-card {
-    border: 1px solid var(--line);
-    padding: 28px 24px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s, background 0.3s;
-  }
-
-  .suit-card::before {
-    content: attr(data-sym);
-    position: absolute;
-    right: -8px;
-    bottom: -16px;
-    font-size: 80px;
-    font-family: serif;
-    opacity: 0.08;
-    line-height: 1;
-    pointer-events: none;
-  }
-
-  .suit-card:hover { background: rgba(212,207,199,0.02); }
-
-  .suit-card.club { border-color: rgba(74,124,89,0.2); }
-  .suit-card.club:hover { border-color: rgba(74,124,89,0.4); }
-  .suit-card.club::before { color: var(--club); }
-
-  .suit-card.heart { border-color: rgba(176,58,58,0.2); }
-  .suit-card.heart:hover { border-color: rgba(176,58,58,0.4); }
-  .suit-card.heart::before { color: var(--heart); }
-
-  .suit-card.diamond { border-color: rgba(74,107,156,0.2); }
-  .suit-card.diamond:hover { border-color: rgba(74,107,156,0.4); }
-  .suit-card.diamond::before { color: var(--diamond); }
-
-  .suit-card.spade { border-color: rgba(122,92,156,0.2); }
-  .suit-card.spade:hover { border-color: rgba(122,92,156,0.4); }
-  .suit-card.spade::before { color: var(--spade); }
-
-  .suit-sym {
-    font-size: 24px;
-    font-family: serif;
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  .suit-card.club .suit-sym { color: var(--club); }
-  .suit-card.heart .suit-sym { color: var(--heart); }
-  .suit-card.diamond .suit-sym { color: var(--diamond); }
-  .suit-card.spade .suit-sym { color: var(--spade); }
-
-  .suit-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 0.06em;
-    color: var(--text);
-    margin-bottom: 10px;
-  }
-
-  .suit-desc {
-    font-size: 12px;
-    color: var(--ash);
-    line-height: 1.7;
-    margin: 0;
-  }
-
-  .suit-tag {
-    display: inline-block;
-    margin-top: 12px;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 4px 8px;
-    border: 1px solid currentColor;
-    opacity: 0.5;
-  }
-
-  .suit-card.club .suit-tag { color: var(--club); }
-  .suit-card.heart .suit-tag { color: var(--heart); }
-  .suit-card.diamond .suit-tag { color: var(--diamond); }
-  .suit-card.spade .suit-tag { color: var(--spade); }
-
-  /* SEASON TIMELINE */
-  .season {
-    margin: 48px 0;
-    position: relative;
-  }
-
-  .season-track {
-    position: relative;
-    padding-left: 32px;
-  }
-
-  .season-track::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    bottom: 8px;
-    width: 1px;
-    background: linear-gradient(to bottom, var(--ember), var(--gold), var(--ember));
-    opacity: 0.3;
-  }
-
-  .season-item {
-    padding: 20px 0 20px 24px;
-    border-bottom: 1px solid var(--line);
-    position: relative;
-  }
-
-  .season-item:last-child { border-bottom: none; }
-
-  .season-item::before {
-    content: '';
-    position: absolute;
-    left: -4px;
-    top: 28px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--ember);
-    border: 1px solid var(--bg);
-  }
-
-  .season-period {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    color: var(--ember);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .season-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    color: var(--text);
-    letter-spacing: 0.04em;
-    margin-bottom: 8px;
-  }
-
-  .season-desc {
-    font-size: 13px;
-    color: var(--ash);
-    line-height: 1.7;
-    margin: 0;
-  }
-
-  /* MECHANICS GRID */
-  .mech-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--line);
-    margin: 40px 0;
-    border: 1px solid var(--line);
-  }
-
-  .mech-cell {
-    background: var(--paper);
-    padding: 24px 20px;
-  }
-
-  .mech-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--dim);
-    margin-bottom: 10px;
-  }
-
-  .mech-label.hot { color: var(--ember); }
-  .mech-label.warm { color: var(--gold); }
-
-  .mech-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    color: var(--text);
-    letter-spacing: 0.04em;
-    margin-bottom: 8px;
-  }
-
-  .mech-desc {
-    font-size: 12px;
-    color: var(--ash);
-    line-height: 1.7;
-    margin: 0;
-  }
-
-  /* KANT SECTION */
-  .kant-block {
-    margin: 40px 0;
-    border: 1px solid rgba(184,154,74,0.2);
-    background: rgba(184,154,74,0.03);
-    padding: 36px;
-    position: relative;
-  }
-
-  .kant-block::before {
-    content: 'KANT · SENSUS COMMUNIS';
-    position: absolute;
-    top: -10px;
-    left: 24px;
-    background: var(--bg);
-    padding: 0 10px;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-  }
-
-  .kant-row {
-    display: grid;
-    grid-template-columns: 1fr 32px 1fr;
-    gap: 0;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(184,154,74,0.1);
-    align-items: center;
-  }
-
-  .kant-row:last-child { border-bottom: none; }
-
-  .kant-left {
-    font-size: 13px;
-    color: var(--ash);
-    line-height: 1.6;
-  }
-
-  .kant-arrow {
-    text-align: center;
-    color: var(--gold);
-    font-size: 14px;
-  }
-
-  .kant-right {
-    font-size: 13px;
-    color: var(--gold);
-    line-height: 1.6;
-    text-align: right;
-  }
-
-  /* PLAYER TYPES */
-  .player-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin: 40px 0;
-  }
-
-  .player-card {
-    border: 1px solid var(--line);
-    padding: 28px 24px;
-    position: relative;
-  }
-
-  .player-type {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 12px;
-  }
-
-  .player-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-
-  .player-list {
-    list-style: none;
-    font-size: 12px;
-    color: var(--ash);
-    line-height: 2;
-  }
-
-  .player-list li::before {
-    content: '— ';
-    color: var(--ember);
-  }
-
-  /* HWANGOK */
-  .hwangok {
-    margin: 40px 0;
-    border: 1px solid rgba(184,154,74,0.2);
-    background: rgba(184,154,74,0.03);
-    padding: 36px;
-    position: relative;
-  }
-
-  .hwangok::before {
-    content: '환곡 모델 · HWANGOK';
-    position: absolute;
-    top: -10px;
-    left: 24px;
-    background: var(--bg);
-    padding: 0 10px;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-  }
-
-  .hw-row {
-    display: grid;
-    grid-template-columns: 1fr 32px 1fr;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(184,154,74,0.1);
-  }
-
-  .hw-row:last-child { border-bottom: none; }
-  .hw-left { font-size: 13px; color: var(--ash); }
-  .hw-arrow { text-align: center; color: var(--ember); }
-  .hw-right { font-size: 13px; color: var(--gold); text-align: right; }
-
-  .hw-note {
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(184,154,74,0.15);
-    font-size: 13px;
-    color: var(--ash);
-    line-height: 1.8;
-  }
-
-  /* POSITIONING */
-  .pos-wrap { overflow-x: auto; margin: 40px 0; }
-
-  .pos-table {
-    width: 100%;
-    border: 1px solid var(--line);
-    border-collapse: collapse;
-    min-width: 520px;
-  }
-
-  .pos-table th, .pos-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--line);
-    border-right: 1px solid var(--line);
-    font-size: 12px;
-    text-align: center;
-  }
-
-  .pos-table th {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--dim);
-    background: rgba(212,207,199,0.03);
-  }
-
-  .pos-table th:first-child,
-  .pos-table td:first-child {
-    text-align: left;
-    font-size: 13px;
-    color: var(--text);
-  }
-
-  .pos-table tr:last-child td { border-bottom: none; }
-  .pos-table td:last-child { border-right: none; }
-  .pos-table th:last-child { border-right: none; }
-
-  .pos-table tr.ours td { background: rgba(196,98,45,0.06); }
-  .pos-table tr.ours td:first-child { color: var(--ember); }
-
-  .check { color: var(--ember); }
-  .cross { color: var(--dim); }
-  .half { color: var(--gold); }
-
-  /* MANIFESTO */
-  .manifesto {
-    margin-top: 80px;
-    padding: 80px 0;
-    border-top: 1px solid var(--line);
-  }
-
-  .m-line {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(24px, 4vw, 48px);
-    line-height: 1.1;
-    color: var(--dim);
-    margin-bottom: 8px;
-    transition: color 0.3s;
-    letter-spacing: 0.02em;
-  }
-
-  .m-line:hover { color: var(--text); }
-  .m-line.hot { color: var(--ember); }
-  .m-line.warm { color: var(--gold); }
-  .m-line.gap { margin-top: 28px; }
-
-  .m-sig {
-    margin-top: 52px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--dim);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  .divider {
-    height: 1px;
-    background: var(--line);
-    margin: 64px 0;
-    position: relative;
-  }
-
-  .divider::after {
-    content: '◆';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--bg);
-    padding: 0 16px;
-    color: var(--ember);
-    font-size: 8px;
-  }
-
-  @media (max-width: 640px) {
-    .cover-main { padding: 60px 24px 48px; }
-    .cover-footer { padding: 24px; flex-direction: column; gap: 12px; }
-    .cover-suits { display: none; }
-    .body { padding: 60px 20px 100px; }
-    .suits-grid { grid-template-columns: 1fr; }
-    .mech-grid { grid-template-columns: 1fr; }
-    .player-grid { grid-template-columns: 1fr; }
-    .kant-row { grid-template-columns: 1fr 24px 1fr; }
-    .hw-row { grid-template-columns: 1fr 24px 1fr; }
-  }
-  /* MYCELIUM GRID */
-.mycelium-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1px;
-  background: var(--line);
-  margin: 48px 0;
-  border: 1px solid var(--line);
+/* ─── TOKENS ─────────────────────────────────────── */
+:root {
+  --bg:      #080808;
+  --paper:   #0f0e0e;
+  --text:    #d4cfc7;
+  --dim:     #5a5248;
+  --ash:     #9a8f84;
+  --line:    rgba(212,207,199,0.09);
+  --subtle:  rgba(212,207,199,0.04);
+  --ember:   #c4622d;
+  --rust:    #c4622d;
+  --gold:    #b89a4a;
+  --club:    #4a7c59;
+  --heart:   #b03a3a;
+  --diamond: #4a6b9c;
+  --spade:   #7a5c9c;
 }
 
-.mycelium-cell {
-  background: var(--paper);
-  padding: 28px 20px;
-}
+/* ─── RESET ──────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
-.mycelium-sym {
-  font-size: 28px;
-  margin-bottom: 12px;
-  display: block;
-  opacity: 0.5;
-  color: var(--ember);
-}
-
-.mycelium-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 8px;
-}
-
-.mycelium-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 20px;
-  letter-spacing: 0.04em;
+/* ─── BASE ───────────────────────────────────────── */
+body {
+  background: var(--bg);
   color: var(--text);
-  margin-bottom: 10px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  line-height: 1.85;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 10% 90%, rgba(196,98,45,.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 90% 10%, rgba(184,154,74,.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(122,92,156,.02) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1;
+}
+.wrap { position: relative; z-index: 2; }
+
+/* ─── ANIMATIONS ─────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes expandLine {
+  from { opacity: 0; width: 0; }
+  to   { opacity: 1; width: 48px; }
 }
 
-.mycelium-desc {
-  font-size: 12px;
-  color: var(--ash);
-  line-height: 1.7;
-  margin: 0;
+/* ─── COVER ──────────────────────────────────────── */
+.cover {
+  min-height: 100vh;
+  display: grid; grid-template-rows: 1fr auto;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden; position: relative;
+}
+.cover-suits {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column;
+  justify-content: center; padding-right: 48px; gap: 8px;
+  opacity: 0; animation: fadeIn 1.2s 1s forwards;
+}
+.cover-suit-sym {
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 1; opacity: .07; font-family: serif;
+}
+.cover-suit-sym.c { color: var(--club); }
+.cover-suit-sym.h { color: var(--heart); }
+.cover-suit-sym.d { color: var(--diamond); }
+.cover-suit-sym.s { color: var(--spade); }
+
+.cover-main {
+  display: flex; flex-direction: column;
+  justify-content: flex-end; padding: 80px 60px 60px; max-width: 680px;
+}
+.cover-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: .3em; color: var(--ember); text-transform: uppercase;
+  margin-bottom: 32px; opacity: 0; animation: fadeIn 1s .3s forwards;
+}
+.cover-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 14vw, 140px);
+  line-height: .88; letter-spacing: .02em; margin-bottom: 24px;
+  opacity: 0; animation: fadeIn 1s .5s forwards;
+}
+.cover-title .project {
+  display: block; font-size: .38em;
+  color: var(--dim); letter-spacing: .3em; margin-bottom: 8px;
+}
+.cover-title .main   { color: var(--text);  display: block; }
+.cover-title .accent { color: var(--ember); display: block; }
+
+.cover-sub {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-size: 18px; color: var(--gold); margin-bottom: 28px;
+  opacity: 0; animation: fadeIn 1s .7s forwards;
+}
+.cover-desc {
+  font-size: 14px; color: var(--ash); line-height: 1.9;
+  opacity: 0; animation: fadeIn 1s .9s forwards;
+}
+.cover-line {
+  width: 48px; height: 1px; background: var(--ember); margin-bottom: 32px;
+  opacity: 0; animation: expandLine 1s .6s forwards;
+}
+.cover-thesis {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-size: 20px; color: var(--ash); line-height: 1.6; max-width: 400px;
+  opacity: 0; animation: fadeIn 1s .8s forwards;
+}
+.cover-right {
+  opacity: 0; animation: fadeIn 1s 1s forwards; padding-bottom: 8px;
+}
+.cover-right-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 24px;
+}
+.cover-propositions { display: flex; flex-direction: column; }
+.proposition {
+  padding: 20px 0; border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: 24px 1fr;
+  gap: 20px; align-items: start;
+}
+.proposition:first-child { border-top: 1px solid var(--line); }
+.prop-num {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  color: var(--ember); letter-spacing: .1em; padding-top: 3px;
+}
+.prop-text { font-size: 14px; color: var(--ash); line-height: 1.75; }
+.prop-text strong { color: var(--text); font-weight: 400; }
+
+.cover-footer {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding: 28px 60px; border-top: 1px solid var(--line);
+  opacity: 0; animation: fadeIn 1s 1.1s forwards;
+}
+.cover-footer-mono {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--dim); letter-spacing: .15em;
+  text-transform: uppercase; line-height: 1.8;
+}
+.cover-footer-italic {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-size: 14px; color: var(--dim); text-align: right; line-height: 1.6;
 }
 
+/* ─── BODY ───────────────────────────────────────── */
+.body { max-width: 800px; margin: 0 auto; padding: 100px 48px 140px; }
+.section {
+  margin-bottom: 96px;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity .8s, transform .8s;
+}
+.section.visible { opacity: 1; transform: none; }
+
+/* ─── SECTION HEADER ─────────────────────────────── */
+.sec-label {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: .25em; color: var(--ember);
+  text-transform: uppercase; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(34px, 5.5vw, 60px);
+  line-height: 1; letter-spacing: .02em; margin-bottom: 32px;
+}
+.sec-title em    { color: var(--ember); font-style: normal; }
+.sec-title .gold { color: var(--gold); }
+
+/* ─── TYPOGRAPHY ─────────────────────────────────── */
+p { font-size: 15px; line-height: 1.95; color: var(--ash); margin-bottom: 20px; }
+strong { color: var(--text); font-weight: 400; }
+
+.divider { height: 1px; background: var(--line); margin: 64px 0; position: relative; }
+.divider::after {
+  content: '◆';
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg); padding: 0 16px; color: var(--ember); font-size: 8px;
+}
+
+/* ─── THESIS ─────────────────────────────────────── */
+.thesis {
+  border-left: 3px solid var(--ember);
+  padding: 28px 32px; margin: 40px 0;
+  background: rgba(196,98,45,.04);
+}
+.thesis p {
+  font-family: 'Crimson Pro', serif; font-size: 21px;
+  font-style: italic; color: var(--text); line-height: 1.65; margin: 0;
+}
+.thesis-gold { border-left-color: var(--gold); background: rgba(184,154,74,.04); }
+.thesis-gold p { color: var(--text); }
+
+/* ─── SUITS GRID ─────────────────────────────────── */
+.suits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 48px 0; }
+.suit-card {
+  border: 1px solid var(--line); padding: 28px 24px;
+  position: relative; overflow: hidden; transition: border-color .3s, background .3s;
+}
+.suit-card::before {
+  content: attr(data-sym);
+  position: absolute; right: -8px; bottom: -16px;
+  font-size: 80px; font-family: serif; opacity: .08; line-height: 1; pointer-events: none;
+}
+.suit-card:hover { background: rgba(212,207,199,.02); }
+.suit-card.club    { border-color: rgba(74,124,89,.2); }
+.suit-card.club:hover    { border-color: rgba(74,124,89,.4); }
+.suit-card.club::before  { color: var(--club); }
+.suit-card.heart   { border-color: rgba(176,58,58,.2); }
+.suit-card.heart:hover   { border-color: rgba(176,58,58,.4); }
+.suit-card.heart::before { color: var(--heart); }
+.suit-card.diamond { border-color: rgba(74,107,156,.2); }
+.suit-card.diamond:hover   { border-color: rgba(74,107,156,.4); }
+.suit-card.diamond::before { color: var(--diamond); }
+.suit-card.spade   { border-color: rgba(122,92,156,.2); }
+.suit-card.spade:hover   { border-color: rgba(122,92,156,.4); }
+.suit-card.spade::before { color: var(--spade); }
+
+.suit-sym { font-size: 24px; font-family: serif; margin-bottom: 12px; display: block; }
+.suit-card.club    .suit-sym { color: var(--club); }
+.suit-card.heart   .suit-sym { color: var(--heart); }
+.suit-card.diamond .suit-sym { color: var(--diamond); }
+.suit-card.spade   .suit-sym { color: var(--spade); }
+
+.suit-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .06em; color: var(--text); margin-bottom: 10px; }
+.suit-desc { font-size: 12px; color: var(--ash); line-height: 1.7; margin: 0; }
+.suit-tag {
+  display: inline-block; margin-top: 12px;
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: .15em; text-transform: uppercase;
+  padding: 4px 8px; border: 1px solid currentColor; opacity: .5;
+}
+.suit-card.club    .suit-tag { color: var(--club); }
+.suit-card.heart   .suit-tag { color: var(--heart); }
+.suit-card.diamond .suit-tag { color: var(--diamond); }
+.suit-card.spade   .suit-tag { color: var(--spade); }
+
+/* ─── SEASON TIMELINE ────────────────────────────── */
+.season { margin: 48px 0; position: relative; }
+.season-track { position: relative; padding-left: 32px; }
+.season-track::before {
+  content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px;
+  background: linear-gradient(to bottom, var(--ember), var(--gold), var(--ember)); opacity: .3;
+}
+.season-item { padding: 20px 0 20px 24px; border-bottom: 1px solid var(--line); position: relative; }
+.season-item:last-child { border-bottom: none; }
+.season-item::before {
+  content: ''; position: absolute; left: -4px; top: 28px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ember); border: 1px solid var(--bg);
+}
+.season-period { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--ember); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 8px; }
+.season-title  { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--text); letter-spacing: .04em; margin-bottom: 8px; }
+.season-desc   { font-size: 13px; color: var(--ash); line-height: 1.7; margin: 0; }
+
+/* ─── COMPARE TABLE ──────────────────────────────── */
+.compare { margin: 48px 0; border: 1px solid var(--line); overflow: hidden; }
+.compare-row { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--line); }
+.compare-row:last-child { border-bottom: none; }
+.compare-row.header { background: var(--subtle); }
+.compare-cell { padding: 16px 20px; font-size: 13px; color: var(--ash); border-right: 1px solid var(--line); line-height: 1.6; }
+.compare-cell:last-child { border-right: none; }
+.compare-cell.head { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); padding: 12px 20px; }
+.compare-cell.label { font-weight: 400; color: var(--text); font-size: 14px; }
+.compare-cell.ours  { color: var(--ember); font-weight: 400; }
+
+/* ─── MECHANICS GRID ─────────────────────────────── */
+.mech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); margin: 40px 0; border: 1px solid var(--line); }
+.mech-cell { background: var(--paper); padding: 24px 20px; }
+.mech-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
+.mech-label.hot  { color: var(--ember); }
+.mech-label.warm { color: var(--gold); }
+.mech-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--text); letter-spacing: .04em; margin-bottom: 8px; }
+.mech-desc  { font-size: 12px; color: var(--ash); line-height: 1.7; margin: 0; }
+
+/* ─── PLAYER CARDS ───────────────────────────────── */
+.player-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 40px 0; }
+.player-card { border: 1px solid var(--line); padding: 28px 24px; }
+.player-type { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--ember); margin-bottom: 12px; }
+.player-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--text); margin-bottom: 12px; }
+.player-list { list-style: none; font-size: 12px; color: var(--ash); line-height: 2; }
+.player-list li::before { content: '— '; color: var(--ember); }
+
+/* ─── HWANGOK BLOCK ──────────────────────────────── */
+.hwangok { margin: 40px 0; border: 1px solid rgba(184,154,74,.2); background: rgba(184,154,74,.03); padding: 36px; position: relative; }
+.hwangok::before { content: '환곡 모델 · HWANGOK'; position: absolute; top: -10px; left: 24px; background: var(--bg); padding: 0 10px; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; color: var(--gold); }
+.hw-row { display: grid; grid-template-columns: 1fr 32px 1fr; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(184,154,74,.1); }
+.hw-row:last-child { border-bottom: none; }
+.hw-left  { font-size: 13px; color: var(--ash); }
+.hw-arrow { text-align: center; color: var(--ember); }
+.hw-right { font-size: 13px; color: var(--gold); text-align: right; }
+.hw-note  { margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(184,154,74,.15); font-size: 13px; color: var(--ash); line-height: 1.8; }
+
+/* ─── WHO GRID ───────────────────────────────────── */
+.who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); margin: 40px 0; border: 1px solid var(--line); }
+.who-cell { background: var(--paper); padding: 32px 28px; }
+.who-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+.who-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--text); margin-bottom: 12px; }
+.who-desc  { font-size: 13px; color: var(--ash); line-height: 1.75; margin: 0; }
+
+/* ─── PIPE DIAGRAM ───────────────────────────────── */
+.pipe { margin: 48px 0; display: flex; flex-direction: column; border: 1px solid var(--line); }
+.pipe-row { display: grid; grid-template-columns: 200px 40px 1fr; align-items: center; border-bottom: 1px solid var(--line); min-height: 64px; }
+.pipe-row:last-child { border-bottom: none; }
+.pipe-from  { padding: 16px 20px; font-size: 13px; color: var(--ash); border-right: 1px solid var(--line); line-height: 1.5; }
+.pipe-arrow { text-align: center; color: var(--ember); font-size: 16px; border-right: 1px solid var(--line); }
+.pipe-to    { padding: 16px 20px; font-size: 13px; color: var(--text); line-height: 1.5; }
+.pipe-to small { display: block; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .1em; color: var(--dim); margin-top: 4px; }
+
+/* ─── PHASE TIMELINE ─────────────────────────────── */
+.phase { margin: 48px 0; padding-left: 32px; position: relative; }
+.phase::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(to bottom, var(--ember), var(--gold)); opacity: .3; }
+.phase-item { padding: 20px 0 20px 28px; border-bottom: 1px solid var(--line); position: relative; }
+.phase-item:last-child { border-bottom: none; }
+.phase-item::before { content: ''; position: absolute; left: -5px; top: 29px; width: 10px; height: 10px; border-radius: 50%; background: var(--ember); border: 2px solid var(--bg); }
+.phase-tag   { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--ember); margin-bottom: 8px; }
+.phase-title { font-family: 'Crimson Pro', serif; font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.phase-desc  { font-size: 13px; color: var(--ash); line-height: 1.75; margin: 0; }
+
+/* ─── MYCELIUM GRID ──────────────────────────────── */
+.mycelium-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); margin: 48px 0; border: 1px solid var(--line); }
+.mycelium-cell { background: var(--paper); padding: 28px 20px; }
+.mycelium-sym   { font-size: 28px; margin-bottom: 12px; display: block; opacity: .5; color: var(--ember); }
+.mycelium-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.mycelium-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: .04em; color: var(--text); margin-bottom: 10px; }
+.mycelium-desc  { font-size: 12px; color: var(--ash); line-height: 1.7; margin: 0; }
+
+/* ─── KANT BLOCK ─────────────────────────────────── */
+.kant-block { margin: 40px 0; border: 1px solid rgba(184,154,74,.2); background: rgba(184,154,74,.03); padding: 36px; position: relative; }
+.kant-block::before { content: 'KANT · SENSUS COMMUNIS'; position: absolute; top: -10px; left: 24px; background: var(--bg); padding: 0 10px; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; color: var(--gold); }
+.kant-row { display: grid; grid-template-columns: 1fr 32px 1fr; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(184,154,74,.1); }
+.kant-row:last-child { border-bottom: none; }
+.kant-left  { font-size: 13px; color: var(--ash); line-height: 1.6; }
+.kant-arrow { text-align: center; color: var(--gold); font-size: 14px; }
+.kant-right { font-size: 13px; color: var(--gold); text-align: right; line-height: 1.6; }
+
+/* ─── POSITIONING TABLE ──────────────────────────── */
+.pos-wrap { overflow-x: auto; margin: 40px 0; }
+.pos-table { width: 100%; border: 1px solid var(--line); border-collapse: collapse; min-width: 520px; }
+.pos-table th, .pos-table td { padding: 12px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); font-size: 12px; text-align: center; color: var(--ash); }
+.pos-table th { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--dim); background: rgba(212,207,199,.03); }
+.pos-table th:first-child, .pos-table td:first-child { text-align: left; font-size: 13px; color: var(--text); }
+.pos-table tr:last-child td { border-bottom: none; }
+.pos-table td:last-child, .pos-table th:last-child { border-right: none; }
+.pos-table tr.ours td { background: rgba(196,98,45,.06); }
+.pos-table tr.ours td:first-child { color: var(--ember); }
+.check { color: var(--ember); }
+.cross { color: var(--dim); }
+.half  { color: var(--gold); }
+
+/* ─── MANIFESTO ──────────────────────────────────── */
+.manifesto { margin-top: 80px; padding: 80px 0; border-top: 1px solid var(--line); }
+.m-line { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 48px); line-height: 1.1; color: var(--dim); margin-bottom: 8px; transition: color .3s; letter-spacing: .02em; }
+.m-line:hover { color: var(--text); }
+.m-line.hot  { color: var(--ember); }
+.m-line.warm { color: var(--gold); }
+.m-line.gap  { margin-top: 28px; }
+.m-sig { margin-top: 52px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--dim); letter-spacing: .2em; text-transform: uppercase; }
+
+/* ─── RESPONSIVE ─────────────────────────────────── */
 @media (max-width: 640px) {
+  .cover-main    { padding: 60px 24px 48px; }
+  .cover-footer  { padding: 24px; flex-direction: column; gap: 12px; }
+  .cover-suits   { display: none; }
+  .body          { padding: 60px 20px 100px; }
+  .suits-grid    { grid-template-columns: 1fr; }
+  .mech-grid     { grid-template-columns: 1fr; }
+  .player-grid   { grid-template-columns: 1fr; }
+  .who-grid      { grid-template-columns: 1fr; }
   .mycelium-grid { grid-template-columns: 1fr; }
+  .kant-row      { grid-template-columns: 1fr 24px 1fr; }
+  .hw-row        { grid-template-columns: 1fr 24px 1fr; }
+  .pipe-row      { grid-template-columns: 1fr 32px 1fr; }
 }
+
 </style>
+</head>
+
 </head>
 <body>
 <div class="wrap">
 
-<!-- COVER -->
+<!-- Cover -->
 <div class="cover">
   <div class="cover-suits">
     <div class="cover-suit-sym c">♣</div>
@@ -767,17 +414,17 @@
   </div>
 
   <div class="cover-main">
-    <div class="cover-eyebrow">Draft 004 · 게임 구조 · 칸트 · 의창 · 포지셔닝</div>
+    <div class="cover-eyebrow">Draft 004 · Play · Ground · Networking</div>
     <h1 class="cover-title">
-      <span class="project">Ainis</span>
-      <span class="main">ATTEN</span>
-      <span class="accent">TION</span>
+      <span class="project">Project</span>
+      <span class="main">AINIS</span>
+      <span class="accent">Whitepaper</span>
     </h1>
-    <div class="cover-sub">Attention을 모으고, 신뢰로 바꾸고, 가장 많은 신뢰를 얻는 자가 이긴다</div>
+    <div class="cover-sub">Attention을 모으고, 신뢰로 바꾸고, 신뢰를  얻는  플레이그라운드</div>
     <p class="cover-desc">
-      연속적인 콘텐츠로 어텐션을 모으는 게임과<br>
+      연속적인 콘텐츠로 신뢰를 모으는 게임과<br>
       그 게임의 플레이그라운드를 만드는 프로젝트.<br>
-      투명한 의창, 버크셔 해서웨이를 롤모델로 하는 어텐션 배분.
+      균사망처럼 유기적인 거래 인프라로 문화의 그라운드를 만듭니다.
     </p>
   </div>
 
@@ -789,7 +436,7 @@
     </div>
     <div class="cover-footer-italic">
       ♣ ♥ ♦ ♠<br>
-      어떤 카드를 뽑을지는 아무도 모른다
+      Play, Networking, Streaming
     </div>
   </div>
 </div>
@@ -811,7 +458,7 @@
 
     <p>
       ATTENTION은 정기 콘텐츠 — 칼럼, 소설, 만화, 드라마 — 로 어텐션을 모으고,
-      그 어텐션을 기록하고, 신뢰로 전환하는 게임과 그 공간을 만듭니다.
+      그 어텐션을 기록하고, 신뢰로 전환하는 게임과 그라운드의 인프라를 만듭니다.
     </p>
     <p>
       세련되고 훌륭한 작품보다 <strong>메인스트림 바깥의 odd한 미학</strong>을 지향합니다.
@@ -833,7 +480,7 @@
         <ul class="player-list">
           <li>연속 콘텐츠로 어텐션을 모은다</li>
           <li>스마트 컨트랙트로 로열티를 실시간 정산받는다</li>
-          <li>정산금을 스테이킹해 달러화 이자를 받는다</li>
+          <li>정산금을 스테이킹해 이자를 받는다</li>
           <li>스테이킹 기간이 신뢰 배지가 된다</li>
           <li>개인 또는 스튜디오 / 매니지먼트 팀 단위</li>
         </ul>
@@ -861,7 +508,7 @@
 
   <!-- 카드 게임 -->
   <div class="section">
-    <div class="sec-label">02 · 게임 구조</div>
+    <div class="sec-label">01 · Game</div>
     <h2 class="sec-title">Credit Game <em>Teams</em></h2>
 
     <p>
@@ -920,90 +567,150 @@
 
   <div class="divider"></div>
 
-  <!-- 칸트 -->
+  <!-- 무엇을 파는가 -->
   <div class="section">
-    <div class="sec-label">03 · 철학적 기반</div>
-    <h2 class="sec-title">비트코인과 <em class="gold">공통감각</em></h2>
+    <div class="sec-label">02 · Playground</div>
+    <h2 class="sec-title"> <em>그라운드</em> 네트워크</h2>
 
     <p>
-      비트코인은 이성적 가치를 지키기 위해 고정된 기표를 거부합니다.
-      그러나 사실 기표는 없는 것이 아니라 — <strong>사람마다 다른 형상으로 존재하고, 빠르게 변하며, 보편적이지 않은 성격</strong>을 가집니다.
+      비자나 페이팔은 거래가 일어나는 방식을 제공하는 인프라입니다.<br>
+      우리는 원작자, 2차 저작자, 팬, 상품을 균사처럼 연결하는 네트워킹을 통해<br>
+      열린 플레이그라운드를 만듭니다.
     </p>
-    <p>
-      칸트적 의미에서 미적 판단은 보편적 동의를 요청합니다. "이것은 아름답다"고 말할 때
-      말하는 이는 모든 사람이 동의해야 한다고 암묵적으로 주장합니다. 비트코인의 기표가 사람마다 다르면
-      그 보편적 동의 — sensus communis — 가 불가능해집니다.
-    </p>
-
-    <div class="kant-block">
-      <div class="kant-row">
-        <div class="kant-left">비트코인<br><small style="color:var(--dim);font-size:11px">고정되지 않은 기표</small></div>
-        <div class="kant-arrow">+</div>
-        <div class="kant-right">ATTENTION 콘텐츠<br><small style="color:var(--dim);font-size:11px">공유된 서사 경험</small></div>
-      </div>
-      <div class="kant-row">
-        <div class="kant-left">가치의 순수성<br><small style="color:var(--dim);font-size:11px">미적 공동체 없음</small></div>
-        <div class="kant-arrow">→</div>
-        <div class="kant-right">Sensus Communis<br><small style="color:var(--dim);font-size:11px">공통감각이 형성된다</small></div>
-      </div>
-      <div class="kant-row">
-        <div class="kant-left">기표 없는 기의처럼 보임</div>
-        <div class="kant-arrow">→</div>
-        <div class="kant-right">ATTENTION이 기표를 입힌다</div>
-      </div>
-    </div>
-
-    <p>
-      올림픽이 4년마다 인류의 공통감각을 만들듯
-      ATTENTION의 시즌과 비엔날레가 비트코인에 서사를 입히는 정기적 리듬이 됩니다.
-      네 진영의 크레딧 게임이 그 공통감각을 만드는 구조입니다.
-    </p>
-
-    <div class="thesis-gold thesis">
-      <p>
-        비트코인이 고정된 기표가 없는 기의라면,<br>
-        ATTENTION이 변화하는 기표의 리듬에 함께 합니다.
+      <div class="cover-line"></div>
+      <p class="cover-thesis">
+        플랫폼 말고, 플레이그라운드
       </p>
+    <div class="cover-right">
+      <div class="cover-right-label">핵심 명제 · Three Propositions</div>
+      <div class="cover-propositions">
+        <div class="proposition">
+          <div class="prop-num">01</div>
+          <div class="prop-text"><strong>1차 저작자에게 실시간으로 로열티가 스트리밍됩니다.</strong><br>플랫폼이 해주는 정산이 아니라, 즉각적이고 투명한 정산.</div>
+        </div>
+        <div class="proposition">
+          <div class="prop-num">02</div>
+          <div class="prop-text"><strong>2차 판권 거래를 투명하게 만듭니다.</strong><br>작품이 드라마, 영화, 게임, MD 등으로 확장될 때 그 거래를 중개합니다. 비트코인으로. 국경 없이.</div>
+        </div>
+        <div class="proposition">
+          <div class="prop-num">03</div>
+          <div class="prop-text"><strong>믿을 수 있는 연결의 과정을 설계합니다.</strong><br>개별 콘텐츠가 아니라 거래의 과정을 판매합니다. IP의 다각적 거래를 위한 네트워크입니다.</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="divider"></div>
-
-  <!-- 환곡 + 수익 -->
+  <!-- 문제 -->
   <div class="section">
-    <div class="sec-label">04 · 경제 구조</div>
-    <h2 class="sec-title">투명한 <em class="gold">의창</em></h2>
+    <div class="sec-label">03 · 문제 제기</div>
+    <h2 class="sec-title">거래의 <em>블랙박스</em></h2>
 
     <p>
-      조선의 의창 — 국가가 곡식을 저장했다가 춘궁기에 빌려주고 수확기에 돌려받는 구조.
-      ATTENTION은 의창을 모델로, 스마트 컨트랙트를 통해 시스템에 투명성을 더합니다.
+      플랫폼 중심의 거래 정산은 불투명하고, 느리고, 보이지 않습니다.<br>
+      플랫폼이 블랙박스가 되어 거래의 모든 과정과 데이터를 잡고 있기 때문입니다.<br>
+      수수료 책정애도, 정산이 이루어지는 시점에도 저작자는 알려줄 때까지 기다려야 합니다.
     </p>
     <p>
-      자본배분의 측면에서 <strong>버크셔 해서웨이를 롤모델</strong>로 합니다.
-      크리에이터의 스테이킹이 플로트가 되고, 그 플로트로 영상화 등의 제작투자와 VC 역할을 수행합니다.
+      2차 판권 거래는 한층 더 복잡해집니다.<br>
+      좋은 작품도 거래 테이블에 앉기까지의 과정은 험난합니다.<br>
+      테이블에는 수많은 에이전트가 복잡함을 더하고, 정산은 지연됩니다. 
     </p>
 
-    <div class="hwangok">
-      <div class="hw-row">
-        <div class="hw-left">콜렉터가 플레이타임을 구매<br><small style="color:var(--dim);font-size:11px">정량제 · 구독 할인</small></div>
-        <div class="hw-arrow">→</div>
-        <div class="hw-right">어텐션 은행에 저장</div>
+    <div class="compare">
+      <div class="compare-row header">
+        <div class="compare-cell head">항목</div>
+        <div class="compare-cell head">기존 파이프</div>
+        <div class="compare-cell head">AINIS</div>
       </div>
-      <div class="hw-row">
-        <div class="hw-left">크리에이터에게 실시간 로열티<br><small style="color:var(--dim);font-size:11px">비트코인 · 스마트 컨트랙트</small></div>
-        <div class="hw-arrow">→</div>
-        <div class="hw-right">크리에이터가 스테이킹<br><small style="color:var(--dim);font-size:11px">달러화 이자 수령</small></div>
+      <div class="compare-row">
+        <div class="compare-cell label">로열티 정산</div>
+        <div class="compare-cell">분기 / 월 단위. 불투명.</div>
+        <div class="compare-cell ours">감상하는 순간. 실시간.</div>
       </div>
-      <div class="hw-row">
-        <div class="hw-left">스테이킹 = 플로트</div>
-        <div class="hw-arrow">→</div>
-        <div class="hw-right">제작투자 · VC 역할 수행</div>
+      <div class="compare-row">
+        <div class="compare-cell label">수수료</div>
+        <div class="compare-cell">40–50%. 플랫폼 독식.</div>
+        <div class="compare-cell ours">거래 발생 시 브로커리지만.</div>
       </div>
-      <div class="hw-row">
-        <div class="hw-left">이자가 생태계로 환류</div>
-        <div class="hw-arrow">→</div>
-        <div class="hw-right">휴지기의 크리에이터를 지탱</div>
+      <div class="compare-row">
+        <div class="compare-cell label">투명성</div>
+        <div class="compare-cell">블랙박스. 작가가 모른다.</div>
+        <div class="compare-cell ours">온체인. 누구나 볼 수 있다.</div>
       </div>
+      <div class="compare-row">
+        <div class="compare-cell label">국경</div>
+        <div class="compare-cell">달러 계좌 필요. 환율 리스크.</div>
+        <div class="compare-cell ours">비트코인. 지갑만 있으면 된다.</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">2차 판권</div>
+        <div class="compare-cell">에이전트. 복잡한 계약. 느린 정산.</div>
+        <div class="compare-cell ours">스마트 컨트랙트 브로커리지.</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="divider"></div>
+
+ <!-- 두 가지 서비스 -->
+  <div class="section">
+    <div class="sec-label">04 · 서비스</div>
+    <h2 class="sec-title">두 가지 <em>파이프</em></h2>
+
+    <div class="who-grid">
+      <div class="who-cell">
+        <div class="who-label">서비스 01 · PLAY Timepack</div>
+        <div class="who-title">플레이 타임팩 판매</div>
+        <p class="who-desc">
+          콘텐츠로 노는 시간을 판매합니다. 정량제 타임팩을 기본으로, 정기구독을 제공합니다.
+          플랫폼에서의 타임팩 구매로 모든 콘텐츠를 향유할 수 있습니다. 규모의 경제가 가능합니다.
+        </p>
+      </div>
+      <div class="who-cell">
+        <div class="who-label">서비스 02 · Royalty Streaming</div>
+        <div class="who-title">로열티 스트리밍 수수료</div>
+        <p class="who-desc">
+          작품이 만화, 드라마, 영화, 게임으로 확장될 때 — AINIS가 거래를 중개합니다.
+          판권 계약이 스마트 컨트랙트로 체결되고, 로열티는 실시간으로 분배됩니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="pipe">
+      <div class="pipe-row">
+        <div class="pipe-from">고객의 플레이 타임</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-to">
+          1차 저작자에게 실시간 정산
+          <small>Bitcoin · Smart Contract · 즉각적</small>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-from">저작자의 스테이킹 선택</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-to">
+          정산 지연 보상 수령 + 신뢰 배지
+          <small>낮은 시간선호 유인 · 의창 플로트</small>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-from">스테이킹 총합 = 플로트</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-to">
+          제작투자 · VC 역할
+          <small>자본 배분</small>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-from">2차 판권 거래</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-to">
+          스트리밍 브로커리지
+          <small>주요 수익원 · 다양한 선택지의 요율</small>
+        </div>
+      </div>
+    </div>
       <div class="hw-note">
         이자의 원천은 실제 문화 소비가 만드는 현금흐름 — 가상의 수익이 아닙니다.<br>
         <strong style="color:var(--gold)">어텐션은 당신의 돈을 묶어두지 않습니다. 직접 선택하세요.</strong>
@@ -1019,7 +726,7 @@
       <div class="mech-cell">
         <div class="mech-label hot">Staking</div>
         <div class="mech-title">지연보상 레버리지</div>
-        <p class="mech-desc">인출 대신 예치. 달러화 이자 + 신뢰 배지. 지연할수록 마스터로 각인.</p>
+        <p class="mech-desc">인출 대신 예치. 이자 + 신뢰 배지. 지연할수록 마스터로 각인.</p>
       </div>
       <div class="mech-cell">
         <div class="mech-label warm">Breakage</div>
@@ -1027,120 +734,109 @@
         <p class="mech-desc">B2C 정량 판매. 정액 구독 시 할인된 가격에 더 많은 플레이타임을 구매 가능.</p>
       </div>
       <div class="mech-cell">
-        <div class="mech-label warm">Float</div>
-        <div class="mech-title">버크셔 모델</div>
-        <p class="mech-desc">스테이킹 총합이 플랫폼 플로트. 제작투자 · VC 역할. 플로트가 생태계를 키운다.</p>
+        <div class="mech-label warm">Allocation</div>
+        <div class="mech-title">자본의 배분</div>
+        <p class="mech-desc">스테이킹 총합이 플랫폼 플로트. 제작투자 · VC 역할. 콘텐츠 생태계는 함께 성장한다.</p>
       </div>
     </div>
-  </div>
+  
 
   <div class="divider"></div>
 
-  <!-- 포지셔닝 -->
+  <!-- 전략 -->
   <div class="section">
     <div class="sec-label">05 · 전략</div>
-    <h2 class="sec-title">싸울 필요 없는 <em>포지션</em></h2>
+    <h2 class="sec-title">작품이 <em>먼저</em>다</h2>
 
     <p>
-      유사한 방향의 프로젝트들 — Audius, Royal, Story Protocol, Zora.
-      이들은 거래 인프라입니다.<br>
-      ATTENTION은 <strong>게임 + 금융 + 예술 + 기술</strong>을 이으며 메타 이야기를 생산합니다.
-      이야기의 내외부를 오가고, 디지털과 물리 공간을 오가며 분산과 연결을 함께 도모합니다.
+      플랫폼만 먼저 나오면 또 하나의 블록체인 프로젝트로 묻힐 뿐이겠죠.
+      이 파이프가 실제로 작동한다는 걸 증명하는 첫 번째 사례가 필요합니다.
+      첫 작품으로 마케팅이 먼저 시작합니다.
     </p>
 
-    <div class="pos-wrap">
-      <table class="pos-table">
-        <thead>
-          <tr>
-            <th>플랫폼</th>
-            <th>어텐션 정산</th>
-            <th>스테이킹</th>
-            <th>크레딧 게임</th>
-            <th>주변부</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>네이버 / 카카오</td>
-            <td><span class="cross">✕</span></td>
-            <td><span class="cross">✕</span></td>
-            <td><span class="cross">✕</span></td>
-            <td><span class="cross">✕</span></td>
-          </tr>
-          <tr>
-            <td>Audius</td>
-            <td><span class="half">△</span></td>
-            <td><span class="cross">✕</span></td>
-            <td><span class="cross">✕</span></td>
-            <td><span class="cross">✕</span></td>
-          </tr>
-          <tr>
-            <td>Royal / Story Protocol</td>
-            <td><span class="cross">✕</span></td>
-            <td><span class="half">△</span></td>
-            <td><span class="cross">✕</span></td>
-            <td><span class="cross">✕</span></td>
-          </tr>
-          <tr class="ours">
-            <td>PROJECT ATTENTION</td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="phase">
+      <div class="phase-item">
+        <div class="phase-tag">지금 · Phase 1</div>
+        <div class="phase-title">마스크폴리스</div>
+        <p class="phase-desc">
+          첫 작품.
+          AINIS 파이프의 첫 번째 증명.
+        </p>
+      </div>
+      <div class="phase-item">
+        <div class="phase-tag">증명 · Phase 2</div>
+        <div class="phase-title">로열티 스트리밍 실증</div>
+        <p class="phase-desc">
+          마스크폴리스 독자의 감상이 실시간으로 저작자에게 흐르는 것을 공개한다.
+          투명하게. 온체인에서. 누구나 볼 수 있게.
+          파이프가 작동한다는 걸 숫자로, 이미지로, 명확하게 보여준다.
+        </p>
+      </div>
+      <div class="phase-item">
+        <div class="phase-tag">확장 · Phase 3</div>
+        <div class="phase-title">다른 저작자 유치</div>
+        <p class="phase-desc">
+          장비 지원 + 원고료로 초기 유입 비용을 낮춘다.
+          저작자 입장에서 리스크가 없다 — 기존 원고료에 투명한 실시간 로열티가 추가되는 것.
+          딜레마에 빠진 웹툰 기업들의 현금이 플로트가 되는 구조를 제안한다.
+        </p>
+      </div>
+      <div class="phase-item">
+        <div class="phase-tag">영화제 · Phase 4</div>
+        <div class="phase-title">AINIS 판권 마켓</div>
+        <p class="phase-desc">
+          선댄스, BIFAN을 롤모델로.
+          크레딧 게임의 총결산이자 2차 판권 거래가 이루어지는 현장.
+        </p>
+      </div>
     </div>
 
-    <p>
-      경쟁자보다 먼저가 아니라 <strong>더 좁게, 더 깊게</strong> 갑니다.
-    </p>
-  </div>
 
   <!-- Goal 섹션 -->
-<div class="section">
-  <div class="sec-label">End · Goal</div>
-  <h2 class="sec-title">버섯 모델 — <em>순환</em></h2>
-<div class="mycelium-grid">
-  <div class="mycelium-cell">
-    <span class="mycelium-sym">⌇</span>
-    <div class="mycelium-label">균사 · Mycelium</div>
-    <div class="mycelium-title">연결 인프라</div>
-    <p class="mycelium-desc">온체인 IP와 스마트 컨트랙트가 균사체처럼 네트워킹한다. 크리에이터, 콜렉터, 진영, 주변부가 보이지 않는 곳에서 연결된다. 탈중앙화가 이념이 아니라 버섯의 생존 방식.</p>
+  <div class="section">
+    <div class="sec-label">End · Goal</div>
+    <h2 class="sec-title">버섯 모델 — <em>순환</em></h2>
+  <div class="mycelium-grid">
+    <div class="mycelium-cell">
+      <span class="mycelium-sym">⌇</span>
+      <div class="mycelium-label">균사 · Mycelium</div>
+      <div class="mycelium-title">연결 인프라</div>
+      <p class="mycelium-desc">온체인 IP와 스마트 컨트랙트가 균사체처럼 네트워킹한다. 크리에이터, 콜렉터, 진영, 주변부가 보이지 않는 곳에서 연결된다. 탈중앙화가 이념이 아니라 버섯의 생존 방식.</p>
+    </div>
+    <div class="mycelium-cell">
+      <span class="mycelium-sym">◉</span>
+      <div class="mycelium-label">갓 · Fruiting Body</div>
+      <div class="mycelium-title">로컬 갤러리</div>
+      <p class="mycelium-desc">균사 네트워크를 지상에서 드러내는 안테나. AINIS에 모인 작품들이 나타나는 물리적 정류소. 갤러리들 간의 네트워킹이 균사를 도시와 지역 너머로 연결한다.</p>
+    </div>
+    <div class="mycelium-cell">
+      <span class="mycelium-sym">∴</span>
+      <div class="mycelium-label">포자 · Spore</div>
+      <div class="mycelium-title">방문의 기록</div>
+      <p class="mycelium-desc">갤러리 방문객에게 방문의 기록을 온체인으로 제공한다. 물리적 공간에서 생성되는 또 다른 균사. 디지털 어텐션이 공간에서도 쌓이는 구조.</p>
+    </div>
   </div>
-  <div class="mycelium-cell">
-    <span class="mycelium-sym">◉</span>
-    <div class="mycelium-label">갓 · Fruiting Body</div>
-    <div class="mycelium-title">로컬 갤러리</div>
-    <p class="mycelium-desc">균사 네트워크를 지상에서 드러내는 안테나. AINIS에 모인 작품들이 나타나는 물리적 정류소. 갤러리들 간의 네트워킹이 균사를 도시와 지역 너머로 연결한다.</p>
-  </div>
-  <div class="mycelium-cell">
-    <span class="mycelium-sym">∴</span>
-    <div class="mycelium-label">포자 · Spore</div>
-    <div class="mycelium-title">방문의 기록</div>
-    <p class="mycelium-desc">갤러리 방문객에게 방문의 기록을 온체인으로 제공한다. 물리적 공간에서 생성되는 또 다른 균사. 디지털 어텐션이 공간에서도 쌓이는 구조.</p>
-  </div>
-</div>
-  <p>
+    <p>
     온체인 IP와 스마트 컨트랙트가 균사체처럼 연결 인프라를 만들어 갑니다.
     전 세계의 작은 로컬 갤러리들과의 연결로 물리적 정류장을 마련합니다.
-  </p>
-  <p>
+    </p>
+    <p>
     물리적, 공간적 거점. 갤러리들 간의 네트워킹을 통해
     균사가 도시와 지역을 넘어 연결됩니다.
-  </p>
-  <p>
+    </p>
+    <p>
     갤러리 방문객들에게는 방문의 기록을 제공합니다.
     온체인에 새겨지는 또 다른 균사와 같은 데이터가 축적됩니다.
     디지털 어텐션이 물리적 공간을 통해 기록되고, 물리적 공간은 데이터로 순환합니다.
-  </p>
+    </p>
 
-  <div class="thesis-gold thesis">
-    <p>
+    <div class="thesis-gold thesis">
+      <p>
       균사는 땅속에서 연결하고,<br>
       갓은 지상에서 나타나고,<br>
       포자를 공중에서 퍼뜨립니다.
-    </p>
+      </p>
+    </div>
   </div>
 </div>
 
@@ -1152,12 +848,12 @@
     <div class="m-line hot">재생</div>
     <div class="m-line gap">믿음</div>
     <div class="m-line warm">데이터</div>
-    <div class="m-line gap">분산</div>
+    <div class="m-line gap">확산</div>
     <div class="m-line hot">연결</div>
-    <div class="m-line gap">새로운 것은 언제나</div>
-    <div class="m-line hot">메인스트림 바깥에서</div>
-    <div class="m-line gap" style="color:var(--dim)">우연히</div>
-    <div class="m-sig">ATTENTION · Whitepaper · 2026</div>
+    <div class="m-line gap">거래</div>
+    <div class="m-line hot">타자</div>
+    <div class="m-line gap" style="color:var(--dim)">우연</div>
+    <div class="m-sig">AINIS · Whitepaper · 2026</div>
   </div>
 
 </div>
